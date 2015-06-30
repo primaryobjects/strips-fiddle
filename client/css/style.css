@@ -1,0 +1,13 @@
+ textarea.code.form-control {
+    height: 200px;
+    white-space: pre;
+    word-wrap: normal;
+    overflow-x: auto;
+    font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+    font-size: 12px;
+}
+
+input[type='text'], select.form-control {
+    font-family: Helvetica, arial, freesans, clean, sans-serif;
+    font-size: 16px;
+}

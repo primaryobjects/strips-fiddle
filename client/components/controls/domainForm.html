@@ -11,7 +11,7 @@
                         <select id='ctrlDomain' class='form-control'>
                             <option>&lt;Create your own&gt;</option>
                             {{ #each domains }}
-                                <option>{{ name }}</option>
+                                <option value='{{ _id }}'>{{ name }}</option>
                             {{ /each }}
                         </select>
                     </div>

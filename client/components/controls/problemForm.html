@@ -11,7 +11,7 @@
                         <select id='ctrlProblem' class='form-control'>
                             <option>&lt;Create your own&gt;</option>
                             {{ #each problems }}
-                                <option>{{ name }}</option>
+                                <option value='{{ _id }}'>{{ name }}</option>
                             {{ /each }}
                         </select>
                     </div>

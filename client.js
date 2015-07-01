@@ -5,7 +5,7 @@ if (Meteor.isClient) {
 
     // Bind to changes to the 'domain' session variable so we can update the Problem dropdown when the Domain dropdown changes.
     Meteor.autosubscribe(function() {
-        Meteor.subscribe('Problems', Session.get('domain'));
+        Meteor.subscribe('Problems', Session.get('domainId'));
     });
 
     // Setup routing.
@@ -76,13 +76,40 @@ if (Meteor.isClient) {
 
     // Event handlers.
     Template.layout.events({
-        'click #navbar li.menu, click .navbar-brand, click #btnRun': function(event, template) {
+        'click #navbar li.menu, click .navbar-brand, click #btnRun, click #btnSave': function(event, template) {
             if (event.currentTarget.id == 'btnRun') {
                 // Run button click.
                 $('.panel-collapse.editor').collapse('hide');
                 $('#outputPanel').collapse('show');
 
                 StripsClient.run($('#txtDomainCode').val(), $('#txtProblemCode').val());
+            }
+            else if (event.currentTarget.id == 'btnSave') {
+                // Save button click.
+                var domainId = $('#ctrlDomain').val();
+                var domainName = $('#ctrlDomain option:selected').text();
+
+                if (domainId.indexOf('<Create your own>') == -1) {
+                    Domains.update({ _id: domainId }, { name: $('#txtDomainName').val(), code: $('#txtDomainCode').val() }, function() {
+                        // Update problem, if one exists.
+                        var problemId = $('#ctrlProblem').val();
+                        if (problemId.indexOf('<Create your own>') == -1) {
+                            Problems.update({ _id: $('#ctrlProblem').val() }, { domain: domainId, name: $('#txtProblemName').val(), code: $('#txtProblemCode').val() });
+                        }
+                        else {
+                            Problems.insert({ domain: domainId, name: $('#txtProblemName').val(), code: $('#txtProblemCode').val() });
+                        }                        
+                    });
+                }
+                else {
+                    Domains.insert({ name: $('#txtDomainName').val(), code: $('#txtDomainCode').val() }, function(err, domainId) {
+                        // Insert new problem, if one exists.
+                        var problemId = $('#ctrlProblem').val();
+                        if (problemId.indexOf('<Create your own>') != -1) {
+                            Problems.insert({ domain: domainId, name: $('#txtProblemName').val(), code: $('#txtProblemCode').val() });
+                        }
+                    });
+                }
             }
             else {
                 // Menu tab click.
@@ -111,13 +138,13 @@ if (Meteor.isClient) {
     Template.domainForm.events({
         'change #ctrlDomain': function(event, template) {
             // Domain dropdown changed.
-            var name = event.target.value;
-            if (name) {
+            var id = event.target.value;
+            if (id) {
                 var domain = {name: '', code: ''};
 
-                // Find the domain in the db that matches the selected name.
+                // Find the domain in the db that matches the selected id.
                 if (event.target.selectedIndex > 0) {
-                    domain = Domains.findOne({ name: name });
+                    domain = Domains.findOne({ _id: id });
                 }
 
                 // Populate the name and code for the domain.
@@ -125,7 +152,7 @@ if (Meteor.isClient) {
                 template.find('#txtDomainCode').value = domain.code;
 
                 // Update problem dropdown.
-                Session.set('domain', name);
+                Session.set('domainId', id);
             }
         }
     });
@@ -133,13 +160,13 @@ if (Meteor.isClient) {
     Template.problemForm.events({
         'change #ctrlProblem': function(event, template) {
             // Problem dropdown changed.
-            var name = event.target.value;
-            if (name) {
+            var id = event.target.value;
+            if (id) {
                 var problem = {name: '', code: ''};
 
-                // Find the problem in the db that matches the selected name.
+                // Find the problem in the db that matches the selected id.
                 if (event.target.selectedIndex > 0) {
-                    problem = Problems.findOne({ name: name });
+                    problem = Problems.findOne({ _id: id });
                 }
 
                 // Populate the name and code for the problem.

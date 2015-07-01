@@ -3,8 +3,10 @@ Meteor.startup(function() {
         return Domains.find();
     });
     
-    Meteor.publish('Problems', function(domain) {
-        return Problems.find({ domain: domain });
+    Meteor.publish('Problems', function(domainId) {
+        if (domainId) {
+            return Problems.find({ domain: domainId });
+        }
     });
 
     if (Domains.find().count() == 0) {
@@ -48,9 +50,10 @@ Meteor.startup(function() {
             Domains.insert(domain);
         });
 
+        var domainsData = Domains.find().fetch();
         var problems = [
             {
-                domain: 'blocksworld1',
+                domain: domainsData[0]._id,
                 name: 'move-blocks-from-a-to-b',
                 code: '(define (problem move-blocks-from-a-to-b)\n' +
                         '(:domain blocksworld)\n' +
@@ -60,7 +63,7 @@ Meteor.startup(function() {
                         ')'
             },
             {
-                domain: 'blocksworld2',
+                domain: domainsData[1]._id,
                 name: 'stack-blocks-ab-from-tablex-to-ab-tabley',
                 code: '(define (problem stack-blocks-a-b-from-tablex-to-ab-tabley)\n' +
                           '(:domain blocksworld)\n' +
@@ -73,7 +76,7 @@ Meteor.startup(function() {
                         ')'
             },
             {
-                domain: 'blocksworld2',
+                domain: domainsData[1]._id,
                 name: 'stack-blocks-stacked-ba-from-tablex-to-stacked-ab-tabley',
                 code: '(define (problem stack-blocks-stacked-ba-from-tablex-to-stacked-ab-tabley)\n' +
                         '(:domain blocksworld)\n' +

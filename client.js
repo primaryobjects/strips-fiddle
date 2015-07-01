@@ -75,23 +75,31 @@ if (Meteor.isClient) {
 
     // Event handlers.
     Template.layout.events({
-        'click #navbar li.menu, click .navbar-brand': function(event, template) {
-            var element = $(event.currentTarget);
-            if (event.currentTarget.className == 'navbar-brand') {
-                element = $($('#navbar li')[0]);
-            }
-
-            // Remove active class from current tab.
-            $(template.find('#navbar li.active')).removeClass('active');
-
-            // Mark tab as active.
-            element.addClass('active');
-
-            if (element.text() == 'Home') {
-                $('#btnRun').show();
+        'click #navbar li.menu, click .navbar-brand, click #btnRun': function(event, template) {
+            if (event.currentTarget.id == 'btnRun') {
+                // Run button click.
+                Meteor.call('run', $('#txtDomainCode').val(), $('#txtProblemCode').val());
             }
             else {
-                $('#btnRun').hide();
+                // Menu tab click.
+                var element = $(event.currentTarget);
+
+                if (event.currentTarget.className == 'navbar-brand') {
+                    element = $($('#navbar li')[0]);
+                }
+
+                // Remove active class from current tab.
+                $(template.find('#navbar li.active')).removeClass('active');
+
+                // Mark tab as active.
+                element.addClass('active');
+
+                if (element.text() == 'Home') {
+                    $('#btnRun').show();
+                }
+                else {
+                    $('#btnRun').hide();
+                }
             }
         }
     });

@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "strips": {
+      "version": "0.0.7",
+      "dependencies": {
+        "pegjs": {
+          "version": "0.8.0"
+        }
+      }
+    }
+  }
+}

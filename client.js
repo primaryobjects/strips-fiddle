@@ -19,6 +19,7 @@ if (Meteor.isClient) {
     // Wait for data to load before initializing dropdowns upon page-load.
     Template.domainForm.rendered = function() {
         var dropdown = $(this.find('#ctrlDomain'));
+        $('.collapse').collapse();
 
         this.autorun(_.bind(function() {
             // Wait for the "#each" loop to finish loading data. We do this by listening for database changes. First, get the same data as the #each loop.
@@ -79,6 +80,7 @@ if (Meteor.isClient) {
             if (event.currentTarget.id == 'btnRun') {
                 // Run button click.
                 Meteor.call('run', $('#txtDomainCode').val(), $('#txtProblemCode').val());
+                //StripsClient.run($('#txtDomainCode').val(), $('#txtProblemCode').val());
             }
             else {
                 // Menu tab click.
@@ -106,14 +108,17 @@ if (Meteor.isClient) {
 
     Template.domainForm.events({
         'change #ctrlDomain': function(event, template) {
+            // Domain dropdown changed.
             var name = event.target.value;
             if (name) {
                 var domain = {name: '', code: ''};
 
+                // Find the domain in the db that matches the selected name.
                 if (event.target.selectedIndex > 0) {
                     domain = Domains.findOne({ name: name });
                 }
 
+                // Populate the name and code for the domain.
                 template.find('#txtDomainName').value = domain.name;
                 template.find('#txtDomainCode').value = domain.code;
 
@@ -125,16 +130,19 @@ if (Meteor.isClient) {
 
     Template.problemForm.events({
         'change #ctrlProblem': function(event, template) {
+            // Problem dropdown changed.
             var name = event.target.value;
             if (name) {
-                var domain = {name: '', code: ''};
+                var problem = {name: '', code: ''};
 
+                // Find the problem in the db that matches the selected name.
                 if (event.target.selectedIndex > 0) {
-                    domain = Problems.findOne({ name: name });
+                    problem = Problems.findOne({ name: name });
                 }
 
-                template.find('#txtProblemName').value = domain.name;
-                template.find('#txtProblemCode').value = domain.code;
+                // Populate the name and code for the problem.
+                template.find('#txtProblemName').value = problem.name;
+                template.find('#txtProblemCode').value = problem.code;
             }
         }
     });

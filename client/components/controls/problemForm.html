@@ -1,31 +1,31 @@
 <template name='problemForm'>
+    <div class="panel panel-default">
+        <div id='problemTab' class="panel-heading accordion-toggle" role='tab' data-toggle='collapse' data-target='#problemPanel' data-parent='#accordion'>
+            <h3 class="panel-title">Problem</h3>
+        </div>
+        <div id='problemPanel' class='panel-collapse collapse' role='tabpanel' aria-labelledby='problemTab'>
+            <div class="panel-body">
+                <form>
+                    <div class='form-group'>
+                        <label>Select an existing Problem</label>
+                        <select id='ctrlProblem' class='form-control'>
+                            <option>&lt;Create your own&gt;</option>
+                            {{ #each problems }}
+                                <option>{{ name }}</option>
+                            {{ /each }}
+                        </select>
+                    </div>
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h3 class="panel-title">Problem</h3>
+                    <div class='form-group'>
+                        <label>Name</label>
+                        <input type='text' id='txtProblemName' class='form-control' placeholder='Problem name' />
+                    </div>
+                    <div class='form-group'>
+                        <label>Code</label>
+                        <textarea id='txtProblemCode' class='code form-control' contenteditable='true' placeholder='Code'></textarea>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-    <div class="panel-body">
-        <form>
-            <div class='form-group'>
-                <label>Select an existing Problem</label>
-                <select id='ctrlProblem' class='form-control'>
-                    <option>&lt;Create your own&gt;</option>
-                    {{ #each problems }}
-                        <option>{{ name }}</option>
-                    {{ /each }}
-                </select>
-            </div>
-
-            <div class='form-group'>
-                <label>Name</label>
-                <input type='text' id='txtProblemName' class='form-control' placeholder='Problem name' />
-            </div>
-            <div class='form-group'>
-                <label>Code</label>
-                <textarea id='txtProblemCode' class='code form-control' contenteditable='true' placeholder='Code'></textarea>
-            </div>
-        </form>
-    </div>
-</div>
-
 </template>

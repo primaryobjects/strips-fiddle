@@ -1,6 +1,8 @@
 <template name='home'>
     <div class='row'>
-        {{ >domainForm }}
-        {{ >problemForm }}
+        <div id='accordion' class='panel-group' role='tablist' aria-multiselectable='true'>
+            {{ >domainForm }}
+            {{ >problemForm }}
+        </div>
     </div>
 </template>

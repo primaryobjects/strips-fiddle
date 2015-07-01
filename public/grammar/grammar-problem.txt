@@ -1,0 +1,57 @@
+/* 
+PDDL2JSON - PEG.js (http://pegjs.org) grammar parser script for converting PDDL to JSON. Designed for strips "problem" files.
+
+Copyright (c) 2015 Kory Becker
+http://primaryobjects.com/kory-becker
+*/
+
+program   = result:problem { return result; }
+ 
+problem = space* delimiter* "define" space* delimiter* "problem" space* name:word delimiter* space* domain:domain delimiter* req:req? delimiter* objects:objects? delimiter* states:state*
+{ return { name: name.join('').replace(/[,:? ]/g, ''), domain: domain, objects: objects, states: states }; }
+ 
+domain = ":domain" space* name:word delimiter*
+{ return name.join('').replace(/[,:? ]/g, ''); }
+
+req = ":requirements" req:reqType* delimiter*
+{
+  var result = [];
+  for (var i in req) {
+     result.push(req[i]);
+  }
+ 
+  return result;
+}
+ 
+reqType = space* ":" req:word
+{ return req.join('').replace(/[,:?]/g, ''); }
+
+objects = ":objects" space* objects:object*
+{ return objects; }
+
+object = parameters:objectName+ "-"? space* type:alphanum? space*
+{ return { parameters: parameters, type: type }; }
+
+objectName = name:alphanum space*
+{ return name; }
+
+state = space* delimiter* ":" name:word space* delimiter* actions:logic*
+{ return { name: name.join('').replace(/[,:? ]/g, ''), actions: actions }; }
+ 
+logic = operation:logicOp* delimiter* action:word space* params:parameter* delimiter*
+{ return { operation: operation.join('').replace(/[,:? ]/g, ''), action: action.join('').replace(/[,:? ]/g, ''), parameters: params }; }
+ 
+boolean   = "#t" / "#f"
+integer   = [1-9] [0-9]*
+string    = "\"" ("\\" . / [^"])* "\""
+word      = word:([a-zA-Z0-9\-]+) { return word; }
+alphanum  = word:([a-zA-Z0-9]+) { return word.join('').replace(/[,:? ]/g, ''); }
+symbol    = (!delimiter .)+
+space     = [\n\r\t ] / comment
+paren     = "(" / ")"
+logicOp   = "and" / "not"
+delimiter = paren / space
+comment   = ";" [a-zA-Z0-9\_\-\;\?\.\:\!\@\#\$\%\^\&\*\~\(\)\[\]\{\}\'\"\<\>\,\/\\ ]* [\n\r]
+ 
+parameter = param:word space*
+{ return param.join('').replace(/[,:? ]/g, ''); }

@@ -65,6 +65,33 @@ if (Meteor.isClient) {
         return Problems.find();
     }
 
+    function save() {
+        var domainId = $('#ctrlDomain').val();
+        var domainName = $('#ctrlDomain option:selected').text();
+
+        if (domainId.indexOf('<Create your own>') == -1) {
+            Domains.update({ _id: domainId }, { name: $('#txtDomainName').val(), code: $('#txtDomainCode').val() }, function() {
+                // Update problem, if one exists.
+                var problemId = $('#ctrlProblem').val();
+                if (problemId.indexOf('<Create your own>') == -1) {
+                    Problems.update({ _id: $('#ctrlProblem').val() }, { domain: domainId, name: $('#txtProblemName').val(), code: $('#txtProblemCode').val() });
+                }
+                else {
+                    Problems.insert({ domain: domainId, name: $('#txtProblemName').val(), code: $('#txtProblemCode').val() });
+                }                        
+            });
+        }
+        else {
+            Domains.insert({ name: $('#txtDomainName').val(), code: $('#txtDomainCode').val() }, function(err, domainId) {
+                // Insert new problem, if one exists.
+                var problemId = $('#ctrlProblem').val();
+                if (problemId.indexOf('<Create your own>') != -1) {
+                    Problems.insert({ domain: domainId, name: $('#txtProblemName').val(), code: $('#txtProblemCode').val() });
+                }
+            });
+        }
+    }
+
     // Access methods for html templates.
     Template.domainForm.helpers({
         domains: domains()
@@ -86,30 +113,7 @@ if (Meteor.isClient) {
             }
             else if (event.currentTarget.id == 'btnSave') {
                 // Save button click.
-                var domainId = $('#ctrlDomain').val();
-                var domainName = $('#ctrlDomain option:selected').text();
-
-                if (domainId.indexOf('<Create your own>') == -1) {
-                    Domains.update({ _id: domainId }, { name: $('#txtDomainName').val(), code: $('#txtDomainCode').val() }, function() {
-                        // Update problem, if one exists.
-                        var problemId = $('#ctrlProblem').val();
-                        if (problemId.indexOf('<Create your own>') == -1) {
-                            Problems.update({ _id: $('#ctrlProblem').val() }, { domain: domainId, name: $('#txtProblemName').val(), code: $('#txtProblemCode').val() });
-                        }
-                        else {
-                            Problems.insert({ domain: domainId, name: $('#txtProblemName').val(), code: $('#txtProblemCode').val() });
-                        }                        
-                    });
-                }
-                else {
-                    Domains.insert({ name: $('#txtDomainName').val(), code: $('#txtDomainCode').val() }, function(err, domainId) {
-                        // Insert new problem, if one exists.
-                        var problemId = $('#ctrlProblem').val();
-                        if (problemId.indexOf('<Create your own>') != -1) {
-                            Problems.insert({ domain: domainId, name: $('#txtProblemName').val(), code: $('#txtProblemCode').val() });
-                        }
-                    });
-                }
+                save();
             }
             else {
                 // Menu tab click.

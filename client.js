@@ -79,6 +79,9 @@ if (Meteor.isClient) {
         'click #navbar li.menu, click .navbar-brand, click #btnRun': function(event, template) {
             if (event.currentTarget.id == 'btnRun') {
                 // Run button click.
+                $('.panel-collapse.editor').collapse('hide');
+                $('#outputPanel').collapse('show');
+
                 StripsClient.run($('#txtDomainCode').val(), $('#txtProblemCode').val());
             }
             else {

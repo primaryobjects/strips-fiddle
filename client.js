@@ -79,8 +79,7 @@ if (Meteor.isClient) {
         'click #navbar li.menu, click .navbar-brand, click #btnRun': function(event, template) {
             if (event.currentTarget.id == 'btnRun') {
                 // Run button click.
-                Meteor.call('run', $('#txtDomainCode').val(), $('#txtProblemCode').val());
-                //StripsClient.run($('#txtDomainCode').val(), $('#txtProblemCode').val());
+                StripsClient.run($('#txtDomainCode').val(), $('#txtProblemCode').val());
             }
             else {
                 // Menu tab click.

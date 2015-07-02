@@ -19,8 +19,10 @@ if (Meteor.isClient) {
                         // Update preferences.
                         selection = result;
                         //localStorage['selection'] = JSON.stringify(selection);
-                        $('#ctrlDomain').val(result.domain).trigger('change');
-                        $('#ctrlProblem').val(result.problem).trigger('change');
+                        $('#ctrlDomain').val(result.domain);
+                        onDomainChange($('#ctrlDomain'));
+                        $('#ctrlProblem').val(result.problem);
+                        onProblemChange($('#ctrlProblem'));
 
                         // Display permalink.
                         var share = $('#share');
@@ -64,56 +66,64 @@ if (Meteor.isClient) {
 
     Template.domainForm.events({
         'change #ctrlDomain': function(event, template) {
-            // Domain dropdown changed.
-            var id = event.target.value;
-            if (id) {
-                var domain = {name: '', code: ''};
-
-                // Find the domain in the db that matches the selected id.
-                if (event.target.selectedIndex > 0) {
-                    domain = Domains.findOne({ _id: id });
-                }
-
-                // Populate the name and code for the domain.
-                template.find('#txtDomainName').value = domain.name;
-                template.find('#txtDomainCode').value = domain.code;
-
-                // Update problem dropdown.
-                Session.set('domainId', id);
-
-                // Remember dropdown selection.
-                selection.domain = id;
-                //localStorage['selection'] = JSON.stringify(selection);
-            }
-
-            $('#share').hide();
+            onDomainChange($(event.target));
         }
     });
 
     Template.problemForm.events({
         'change #ctrlProblem': function(event, template) {
-            // Problem dropdown changed.
-            var id = event.target.value;
-            if (id) {
-                var problem = {name: '', code: ''};
-
-                // Find the problem in the db that matches the selected id.
-                if (event.target.selectedIndex > 0) {
-                    problem = Problems.findOne({ _id: id });
-
-                    // Remember dropdown selection.
-                    selection.problem = id;
-                    //localStorage['selection'] = JSON.stringify(selection);                    
-                }
-
-                // Populate the name and code for the problem.
-                template.find('#txtProblemName').value = problem.name;
-                template.find('#txtProblemCode').value = problem.code;
-            }
-
-            $('#share').hide();            
+            onProblemChange($(event.target));
         }
     });
+
+    function onDomainChange(element) {
+        // Domain dropdown changed.
+        var id = element.val();
+        if (id) {
+            var domain = {name: '', code: ''};
+
+            // Find the domain in the db that matches the selected id.
+            if (element.prop('selectedIndex') > 0) {
+                domain = Domains.findOne({ _id: id });
+            }
+
+            // Populate the name and code for the domain.
+            $('#txtDomainName').val(domain.name);
+            $('#txtDomainCode').val(domain.code);
+
+            // Update problem dropdown.
+            Session.set('domainId', id);
+
+            // Remember dropdown selection.
+            selection.domain = id;
+            //localStorage['selection'] = JSON.stringify(selection);
+        }
+
+        $('#share').hide();
+    }
+
+    function onProblemChange(element) {
+        // Problem dropdown changed.
+        var id = element.val();
+        if (id) {
+            var problem = {name: '', code: ''};
+
+            // Find the problem in the db that matches the selected id.
+            if (element.prop('selectedIndex') > 0) {
+                problem = Problems.findOne({ _id: id });
+
+                // Remember dropdown selection.
+                selection.problem = id;
+                //localStorage['selection'] = JSON.stringify(selection);                    
+            }
+
+            // Populate the name and code for the problem.
+            $('#txtProblemName').val(problem.name);
+            $('#txtProblemCode').val(problem.code);
+        }
+
+        $('#share').hide();
+    }
 
     function save(callback) {
         var domainId = $('#ctrlDomain').val();

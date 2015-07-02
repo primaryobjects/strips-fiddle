@@ -88,8 +88,11 @@ if (Meteor.isClient) {
             //localStorage['selection'] = JSON.stringify(selection);
         }
 
+        if (element.prop('selectedIndex') == 0) {
+            selection.domain = null;
+        }
+
         updateShareLink();
-        //$('#share').hide();
     }
 
     function onProblemChange(element) {
@@ -113,7 +116,6 @@ if (Meteor.isClient) {
         }
 
         updateShareLink();
-        //$('#share').hide();
     }
 
     function updateShareLink() {
@@ -121,12 +123,18 @@ if (Meteor.isClient) {
         var share = $('#share');
         
         var url = window.location.host + '?d=' + selection.domain;
-        if (selection.problem) {
-            url += (selection.problem.indexOf('<Create your own>') > -1 ? '' : '&p=' + selection.problem);
+        if (selection.problem && $('#ctrlProblem').prop('selectedIndex') > 0) {
+            url += '&p=' + selection.problem;
         }
 
         share.attr('href', url);
-        share.show();
+
+        if (selection.domain) {
+            share.show();
+        }
+        else {
+            share.hide();
+        }
     }
 
     function save(callback) {

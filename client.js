@@ -84,6 +84,20 @@ if (Meteor.isClient) {
                 //e.stopImmediatePropagation();
             }
         });
+
+        // Find the tab that matches the route.
+        var tab = $('.navbar-nav').find("li a[href='" + window.location.pathname + "']");
+
+        // Highlight active menu for route.
+        tab.closest('li').addClass('active');
+
+        // Show/hide controls for route.
+        if (tab.text() == 'Home') {
+            $('li.controls').show();
+        }
+        else {
+            $('li.controls').hide();
+        }
     };
 
     // Access methods for database.

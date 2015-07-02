@@ -122,7 +122,7 @@ if (Meteor.isClient) {
         // Display permalink.
         var share = $('#share');
         
-        var url = window.location.host + '?d=' + selection.domain;
+        var url = 'http://' + window.location.host + '?d=' + selection.domain;
         if (selection.problem && $('#ctrlProblem').prop('selectedIndex') > 0) {
             url += '&p=' + selection.problem;
         }

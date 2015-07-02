@@ -31,7 +31,7 @@ Meteor.methods({
             throw new Meteor.Error("not-authorized");
         }
         else {
-            Domains.update({ _id: domain }, { user: Meteor.userId(), name: name, code: code }, function() {
+            Domains.update({ _id: domain, user: Meteor.userId() }, { $set: { name: name, code: code } }, function(err, count) {
                 if (callback) {
                     callback();
                 }
@@ -44,7 +44,7 @@ Meteor.methods({
             throw new Meteor.Error("not-authorized");
         }
         else {
-            Problems.update({ _id: problem }, { user: Meteor.userId(), domain: domain, name: name, code: code }, function() {
+            Problems.update({ _id: problem, user: Meteor.userId() }, { $set: { name: name, code: code } }, function(err, count) {
                 if (callback) {
                     callback();
                 }

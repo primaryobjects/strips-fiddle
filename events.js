@@ -85,4 +85,36 @@ if (Meteor.isClient) {
             }
         }
     });
+
+    function save() {
+        var domainId = $('#ctrlDomain').val();
+        var domainName = $('#ctrlDomain option:selected').text();
+        var txtDomainName = $('#txtDomainName').val();
+        var txtProblemName = $('#txtProblemName').val();
+
+        if (txtDomainName) {
+            if (domainId && domainId.indexOf('<Create your own>') == -1) {
+                Meteor.call('updateDomain', domainId, txtDomainName, $('#txtDomainCode').val(), function() {
+                    // Update problem, if one exists.
+                    var problemId = $('#ctrlProblem').val();
+                    if (problemId && problemId.indexOf('<Create your own>') == -1) {
+                        Meteor.call('updateProblem', domainId, problemId, txtProblemName, $('#txtProblemCode').val());
+                    }
+                    else if (txtProblemName) {
+                        Meteor.call('addProblem', txtProblemName, $('#txtProblemCode').val(), domainId);
+                    }                        
+                });
+            }
+            else {
+                Meteor.call('addDomain', txtDomainName, $('#txtDomainCode').val(), function(domainId) {
+                    // Insert new problem, if one exists.
+                    var problemId = $('#ctrlProblem').val();
+
+                    if ((!problemId || problemId.indexOf('<Create your own>') != -1) && txtProblemName) {
+                        Meteor.call('addProblem', txtProblemName, $('#txtProblemCode').val(), domainId);
+                    }
+                });
+            }
+        }
+    }    
 }

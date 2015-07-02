@@ -1,4 +1,28 @@
 <template name='about'>
     <h1>About</h1>
-    <p>lala</p>
+    
+    <p>STRIPS-Fiddle is an online editor for creating STRIPS artificial intelligence planning programs, using the PDDL scripting language, and powered by the node <a href='https://github.com/primaryobjects/strips' target='_blank'>strips</a> library.</p>
+
+    <h2>What is STRIPS?</h2>
+
+    <p><a href="https://en.wikipedia.org/wiki/STRIPS" target="_blank">STRIPS</a> stands for "Standford Research Institute Problem Solver". It's a type of automated planner that comprises of an initial state, actions, and a goal state. By applying the actions over the initial state and all child states, a goal is (hopefully) found.</p>
+
+    <p>STRIPS uses simple definitions for actions. Actions include preconditions (conditions that must be in the present state) and postconditions (changes to be applied to the present state). A state (initial and goal) is represented by a series of literals and predicates. For example: holding(gold) has(shovel). Here's an example <a href="https://github.com/primaryobjects/strips/blob/master/examples/starcraft/domain.txt" target="_blank">domain</a> and <a href="https://github.com/primaryobjects/strips/blob/master/examples/starcraft/barracks.txt" target="_blank">problem</a> in PDDL that solves Starcraft build orders!</p>
+
+    <p>One of the neat things about STRIPS is that you can apply various search algorithms to iterate the various states and find solutions. Common methods include breadth-first search, depth-first search, and A*.</p>
+    <h2>How was this made?</h2>
+
+    <p>STRIPS-Fiddle is powered by the <a href='https://github.com/primaryobjects/strips' target='_blank'>strips</a> node.js <a href='https://www.npmjs.com/package/strips' target='_blank'>library</a>.</p>
+
+    <p>The strips library is an easy way to try out PDDL programs. By default, the library runs server-side in a node.js application. For STRIPS-Fiddle, the library was <a href='http://browserify.org/' target='_blank'>ported</a> to client javascript and now runs in the browser!</p>
+
+    <p>When you run a program in STRIPS-Fiddle, it's executed locally in the web browser and the output is displayed on the page.</p>
+
+    <p>Oh yeah, this web site was made with <a href='https://www.meteor.com/' target='_blank'>Meteor.js</a>.</p>
+
+    <h2>Who created this?</h2>
+
+    <p>STRIPS-Fiddle was created by <a href='http://www.primaryobjects.com/kory-becker' target='_blank'>Kory Becker</a>, a software developer, trying to <a href="http://primaryobjects.com/CMS/Article149.aspx" target="_blank" title="Using Artificial Intelligence to Write Self-Modifying and Improving Programs">make</a> <a href="http://primaryobjects.com/CMS/Article130.aspx" target="_blank" title="Creating a Chatbot that Talks on Gmail">computers</a> <a href="http://primaryobjects.com/CMS/Article154.aspx" target="_blank" title="An Intelligent Approach to Image Classification By Color">smarter</a>.</p>
+
+    <p>You can contact me <a href='/contact'>here</a>.</p>
 </template>

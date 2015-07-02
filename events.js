@@ -94,7 +94,7 @@ if (Meteor.isClient) {
 
         if (txtDomainName) {
             if (domainId && domainId.indexOf('<Create your own>') == -1) {
-                Meteor.call('updateDomain', domainId, txtDomainName, $('#txtDomainCode').val(), function() {
+                Meteor.call('updateDomain', domainId, txtDomainName, $('#txtDomainCode').val(), function(err, count) {
                     // Update problem, if one exists.
                     var problemId = $('#ctrlProblem').val();
                     if (problemId && problemId.indexOf('<Create your own>') == -1) {
@@ -106,9 +106,7 @@ if (Meteor.isClient) {
                 });
             }
             else {
-                Meteor.call('addDomain', txtDomainName, $('#txtDomainCode').val(), function() {
-                    domainId = Session.get('addDomainResult');
-
+                Meteor.call('addDomain', txtDomainName, $('#txtDomainCode').val(), function(err, domainId) {
                     // Insert new problem, if one exists.
                     var problemId = $('#ctrlProblem').val();
 

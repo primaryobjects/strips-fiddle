@@ -5,9 +5,13 @@ Meteor.methods({
             throw new Meteor.Error("not-authorized");
         }
         else {
-            Domains.insert({ user: Meteor.userId(),  name: name, code: code }, function(err, id) {
-                Session.set('addDomainResult', id);
+            var func = Meteor.wrapAsync(function(callback) {
+                Domains.insert({ user: Meteor.userId(),  name: name, code: code }, function(err, id) {
+                    callback(err, id);
+                });
             });
+
+            return func();
         }
     },
 
@@ -25,7 +29,13 @@ Meteor.methods({
             throw new Meteor.Error("not-authorized");
         }
         else {
-            Domains.update({ _id: domain, user: Meteor.userId() }, { $set: { name: name, code: code } });
+            var func = Meteor.wrapAsync(function(callback) {
+                Domains.update({ _id: domain, user: Meteor.userId() }, { $set: { name: name, code: code } }, function(err, count) {
+                    callback(err, count);
+                });
+            });
+
+            return func();
         }
     },
 

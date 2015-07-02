@@ -5,26 +5,24 @@
         </div>
         <div id='domainPanel' class='panel-collapse collapse editor' role='tabpanel' aria-labelledby='domainTab'>
             <div class="panel-body">
-                <form>
-                    <div class='form-group'>
-                        <label>Select an existing Domain</label>
-                        <select id='ctrlDomain' class='form-control'>
-                            <option>&lt;Create your own&gt;</option>
-                            {{ #each domains }}
-                                <option value='{{ _id }}'>{{ name }}</option>
-                            {{ /each }}
-                        </select>
-                    </div>
+                <div class='form-group'>
+                    <label>Select an existing Domain</label>
+                    <select id='ctrlDomain' class='form-control'>
+                        <option>&lt;Create your own&gt;</option>
+                        {{ #each domains }}
+                            <option value='{{ _id }}'>{{ name }}</option>
+                        {{ /each }}
+                    </select>
+                </div>
 
-                    <div class='form-group'>
-                        <label>Name</label>
-                        <input type='text' id='txtDomainName' class='form-control' placeholder='Domain name' />
-                    </div>
-                    <div class='form-group'>
-                        <label>Code</label>
-                        <textarea id='txtDomainCode' class='code form-control' contenteditable='true' placeholder='Code'></textarea>
-                    </div>
-                </form>
+                <div class='form-group'>
+                    <label>Name</label>
+                    <input type='text' id='txtDomainName' class='form-control' placeholder='Domain name' required />
+                </div>
+                <div class='form-group'>
+                    <label>Code</label>
+                    <textarea id='txtDomainCode' class='code form-control' contenteditable='true' placeholder='Code'></textarea>
+                </div>
             </div>
         </div>
     </div>

@@ -1,11 +1,11 @@
 Meteor.startup(function() {
     Meteor.publish('Domains', function() {
-        return Domains.find();
+        return Domains.find({ user: this.userId || 'public' });
     });
     
     Meteor.publish('Problems', function(domainId) {
         if (domainId) {
-            return Problems.find({ domain: domainId });
+            return Problems.find({ user: this.userId || 'public', domain: domainId });
         }
     });
 
@@ -13,6 +13,7 @@ Meteor.startup(function() {
         // Create sample data.
         var domains = [
             {
+                user: 'public',
                 name: 'blocksworld1',
                 code: '(define (domain blocksworld)\n' +
                       '  (:requirements :strips)\n' +
@@ -23,6 +24,7 @@ Meteor.startup(function() {
                       ')'
             },
             {
+                user: 'public',
                 name: 'blocksworld2',
                 code: '(define (domain blocksworld)\n' +
                       '(:requirements :strips :typing)\n' +
@@ -53,6 +55,7 @@ Meteor.startup(function() {
         var domainsData = Domains.find().fetch();
         var problems = [
             {
+                user: 'public',
                 domain: domainsData[0]._id,
                 name: 'move-blocks-from-a-to-b',
                 code: '(define (problem move-blocks-from-a-to-b)\n' +
@@ -63,6 +66,7 @@ Meteor.startup(function() {
                         ')'
             },
             {
+                user: 'public',
                 domain: domainsData[1]._id,
                 name: 'stack-blocks-ab-from-tablex-to-ab-tabley',
                 code: '(define (problem stack-blocks-a-b-from-tablex-to-ab-tabley)\n' +
@@ -76,6 +80,7 @@ Meteor.startup(function() {
                         ')'
             },
             {
+                user: 'public',
                 domain: domainsData[1]._id,
                 name: 'stack-blocks-stacked-ba-from-tablex-to-stacked-ab-tabley',
                 code: '(define (problem stack-blocks-stacked-ba-from-tablex-to-stacked-ab-tabley)\n' +

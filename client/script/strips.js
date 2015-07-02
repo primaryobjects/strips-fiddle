@@ -6140,7 +6140,12 @@ StripsManager = {
             var parser = PEG.buildParser(grammar);
          
             if (callback) {
-                callback(parser.parse(code));
+                try {
+                  callback(parser.parse(code));
+                }
+                catch (excep) {
+                  StripsManager.output(excep.message);
+                }
             }            
           }
         })         

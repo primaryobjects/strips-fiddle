@@ -56,6 +56,16 @@ if (Meteor.isClient) {
         }, this));
     };
 
+    Template.layout.rendered = function() {
+        // Show validation and disable save button on invalid fields.
+        $('form').validator().on('submit', function (e) {
+            if (e.isDefaultPrevented()) {
+                e.preventDefault();
+                //e.stopImmediatePropagation();
+            }
+        });
+    };
+
     // Access methods for database.
     function domains() {
         return Domains.find();
@@ -68,27 +78,32 @@ if (Meteor.isClient) {
     function save() {
         var domainId = $('#ctrlDomain').val();
         var domainName = $('#ctrlDomain option:selected').text();
+        var txtDomainName = $('#txtDomainName').val();
+        var txtProblemName = $('#txtProblemName').val();
 
-        if (domainId.indexOf('<Create your own>') == -1) {
-            Domains.update({ _id: domainId }, { name: $('#txtDomainName').val(), code: $('#txtDomainCode').val() }, function() {
-                // Update problem, if one exists.
-                var problemId = $('#ctrlProblem').val();
-                if (problemId.indexOf('<Create your own>') == -1) {
-                    Problems.update({ _id: $('#ctrlProblem').val() }, { domain: domainId, name: $('#txtProblemName').val(), code: $('#txtProblemCode').val() });
-                }
-                else {
-                    Problems.insert({ domain: domainId, name: $('#txtProblemName').val(), code: $('#txtProblemCode').val() });
-                }                        
-            });
-        }
-        else {
-            Domains.insert({ name: $('#txtDomainName').val(), code: $('#txtDomainCode').val() }, function(err, domainId) {
-                // Insert new problem, if one exists.
-                var problemId = $('#ctrlProblem').val();
-                if (problemId.indexOf('<Create your own>') != -1) {
-                    Problems.insert({ domain: domainId, name: $('#txtProblemName').val(), code: $('#txtProblemCode').val() });
-                }
-            });
+        if (txtDomainName) {
+            if (domainId && domainId.indexOf('<Create your own>') == -1) {
+                Meteor.call('updateDomain', domainId, txtDomainName, $('#txtDomainCode').val(), function() {
+                    // Update problem, if one exists.
+                    var problemId = $('#ctrlProblem').val();
+                    if (problemId && problemId.indexOf('<Create your own>') == -1) {
+                        Meteor.call('updateProblem', domainId, problemId, txtProblemName, $('#txtProblemCode').val());
+                    }
+                    else if (txtProblemName) {
+                        Meteor.call('addProblem', txtProblemName, $('#txtProblemCode').val(), domainId);
+                    }                        
+                });
+            }
+            else {
+                Meteor.call('addDomain', txtDomainName, $('#txtDomainCode').val(), function(domainId) {
+                    // Insert new problem, if one exists.
+                    var problemId = $('#ctrlProblem').val();
+
+                    if ((!problemId || problemId.indexOf('<Create your own>') != -1) && txtProblemName) {
+                        Meteor.call('addProblem', txtProblemName, $('#txtProblemCode').val(), domainId);
+                    }
+                });
+            }
         }
     }
 
@@ -103,7 +118,7 @@ if (Meteor.isClient) {
 
     // Event handlers.
     Template.layout.events({
-        'click #navbar li.menu, click .navbar-brand, click #btnRun, click #btnSave': function(event, template) {
+        'click #navbar li.menu, click .navbar-brand, click #btnRun, submit': function(event, template) {
             if (event.currentTarget.id == 'btnRun') {
                 // Run button click.
                 $('.panel-collapse.editor').collapse('hide');
@@ -111,9 +126,17 @@ if (Meteor.isClient) {
 
                 StripsClient.run($('#txtDomainCode').val(), $('#txtProblemCode').val());
             }
-            else if (event.currentTarget.id == 'btnSave') {
+            else if (event.type == 'submit') {
                 // Save button click.
-                save();
+                if (!Meteor.userId()) {
+                    $('#login-dropdown-list').find('a').trigger('click');
+                }
+                else {
+                    save();
+                }
+
+                // Prevent actual form submisson.
+                return false;
             }
             else {
                 // Menu tab click.
@@ -180,3 +203,57 @@ if (Meteor.isClient) {
         }
     });
 }
+
+Meteor.methods({
+    addDomain: function(name, code, callback) {
+        if (!Meteor.userId()) {
+            throw new Meteor.Error("not-authorized");
+        }
+        else {
+            Domains.insert({ user: Meteor.userId(),  name: name, code: code }, function(err, id) {
+                if (callback) {
+                    callback(id);
+                }
+            });
+        }
+    },
+
+    addProblem: function(name, code, domain, callback) {
+        if (!Meteor.userId()) {
+            throw new Meteor.Error("not-authorized");
+        }
+        else {
+            Problems.insert({ user: Meteor.userId(),  domain: domain, name: name, code: code }, function(err, id) {
+                if (callback) {
+                    callback(id);
+                }
+            });
+        }
+    },
+
+    updateDomain: function(domain, name, code, callback) {
+        if (!Meteor.userId()) {
+            throw new Meteor.Error("not-authorized");
+        }
+        else {
+            Domains.update({ _id: domain }, { user: Meteor.userId(), name: name, code: code }, function() {
+                if (callback) {
+                    callback();
+                }
+            });
+        }
+    },
+
+    updateProblem: function(domain, problem, name, code, callback) {
+        if (!Meteor.userId()) {
+            throw new Meteor.Error("not-authorized");
+        }
+        else {
+            Problems.update({ _id: problem }, { user: Meteor.userId(), domain: domain, name: name, code: code }, function() {
+                if (callback) {
+                    callback();
+                }
+            });
+        }
+    }
+});

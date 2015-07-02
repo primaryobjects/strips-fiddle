@@ -7,6 +7,7 @@ StripsClient = {
         StripsManager.verbose = true;
         StripsManager.output = StripsClient.log;
 
+        try {
         // Load the domain and problem.
         StripsManager.load(domain, problem, function(domain, problem) {
             // Run the problem against the domain.
@@ -23,6 +24,10 @@ StripsClient = {
                 }        
             }
         }, true);
+        }
+        catch (excep) {
+            StripsClient.log(excep.message);
+        }
     },
 
     log: function(text) {

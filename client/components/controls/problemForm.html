@@ -5,26 +5,24 @@
         </div>
         <div id='problemPanel' class='panel-collapse collapse editor' role='tabpanel' aria-labelledby='problemTab'>
             <div class="panel-body">
-                <form>
-                    <div class='form-group'>
-                        <label>Select an existing Problem</label>
-                        <select id='ctrlProblem' class='form-control'>
-                            <option>&lt;Create your own&gt;</option>
-                            {{ #each problems }}
-                                <option value='{{ _id }}'>{{ name }}</option>
-                            {{ /each }}
-                        </select>
-                    </div>
+                <div class='form-group'>
+                    <label>Select an existing Problem</label>
+                    <select id='ctrlProblem' class='form-control'>
+                        <option>&lt;Create your own&gt;</option>
+                        {{ #each problems }}
+                            <option value='{{ _id }}'>{{ name }}</option>
+                        {{ /each }}
+                    </select>
+                </div>
 
-                    <div class='form-group'>
-                        <label>Name</label>
-                        <input type='text' id='txtProblemName' class='form-control' placeholder='Problem name' />
-                    </div>
-                    <div class='form-group'>
-                        <label>Code</label>
-                        <textarea id='txtProblemCode' class='code form-control' contenteditable='true' placeholder='Code'></textarea>
-                    </div>
-                </form>
+                <div class='form-group'>
+                    <label>Name</label>
+                    <input type='text' id='txtProblemName' class='form-control' placeholder='Problem name' />
+                </div>
+                <div class='form-group'>
+                    <label>Code</label>
+                    <textarea id='txtProblemCode' class='code form-control' contenteditable='true' placeholder='Code'></textarea>
+                </div>
             </div>
         </div>
     </div>

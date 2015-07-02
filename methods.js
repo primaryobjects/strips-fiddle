@@ -5,6 +5,7 @@ Meteor.methods({
             throw new Meteor.Error("not-authorized");
         }
         else {
+            // Wrap the async db method so we can return the result value in the callback.
             var func = Meteor.wrapAsync(function(callback) {
                 Domains.insert({ user: Meteor.userId(),  name: name, code: code }, function(err, id) {
                     callback(err, id);
@@ -29,6 +30,7 @@ Meteor.methods({
             throw new Meteor.Error("not-authorized");
         }
         else {
+            // Wrap the async db method so we can return the result value in the callback.
             var func = Meteor.wrapAsync(function(callback) {
                 Domains.update({ _id: domain, user: Meteor.userId() }, { $set: { name: name, code: code } }, function(err, count) {
                     callback(err, count);

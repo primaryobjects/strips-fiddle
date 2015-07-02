@@ -94,7 +94,7 @@ if (Meteor.isClient) {
 
         if (txtDomainName) {
             if (domainId && domainId.indexOf('<Create your own>') == -1) {
-                Meteor.call('updateDomain', domainId, txtDomainName, $('#txtDomainCode').val(), function(err, count) {
+                Meteor.call('updateDomain', domainId, txtDomainName, $('#txtDomainCode').val(), function() {
                     // Update problem, if one exists.
                     var problemId = $('#ctrlProblem').val();
                     if (problemId && problemId.indexOf('<Create your own>') == -1) {

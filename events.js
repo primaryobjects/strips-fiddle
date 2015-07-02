@@ -98,10 +98,10 @@ if (Meteor.isClient) {
                     // Update problem, if one exists.
                     var problemId = $('#ctrlProblem').val();
                     if (problemId && problemId.indexOf('<Create your own>') == -1) {
-                        Meteor.call('updateProblem', domainId, problemId, txtProblemName, $('#txtProblemCode').val());
+                        Meteor.call('updateProblem', problemId, txtProblemName, $('#txtProblemCode').val());
                     }
                     else if (txtProblemName) {
-                        Meteor.call('addProblem', txtProblemName, $('#txtProblemCode').val(), domainId);
+                        Meteor.call('addProblem', domainId, txtProblemName, $('#txtProblemCode').val());
                     }                        
                 });
             }

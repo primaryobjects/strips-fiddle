@@ -13,7 +13,7 @@ Meteor.methods({
         }
     },
 
-    addProblem: function(name, code, domain, callback) {
+    addProblem: function(domain, name, code, callback) {
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }
@@ -39,7 +39,7 @@ Meteor.methods({
         }
     },
 
-    updateProblem: function(domain, problem, name, code, callback) {
+    updateProblem: function(problem, name, code, callback) {
         if (!Meteor.userId()) {
             throw new Meteor.Error("not-authorized");
         }

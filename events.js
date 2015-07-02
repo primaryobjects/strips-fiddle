@@ -106,12 +106,14 @@ if (Meteor.isClient) {
                 });
             }
             else {
-                Meteor.call('addDomain', txtDomainName, $('#txtDomainCode').val(), function(domainId) {
+                Meteor.call('addDomain', txtDomainName, $('#txtDomainCode').val(), function() {
+                    domainId = Session.get('addDomainResult');
+
                     // Insert new problem, if one exists.
                     var problemId = $('#ctrlProblem').val();
 
                     if ((!problemId || problemId.indexOf('<Create your own>') != -1) && txtProblemName) {
-                        Meteor.call('addProblem', txtProblemName, $('#txtProblemCode').val(), domainId);
+                        Meteor.call('addProblem', domainId, txtProblemName, $('#txtProblemCode').val());
                     }
                 });
             }

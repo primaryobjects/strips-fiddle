@@ -23,17 +23,6 @@ if (Meteor.isClient) {
                         onDomainChange($('#ctrlDomain'));
                         $('#ctrlProblem').val(result.problem);
                         onProblemChange($('#ctrlProblem'));
-
-                        // Display permalink.
-                        var share = $('#share');
-                        
-                        var url = window.location.host + '?d=' + result.domain;
-                        if (result.problem) {
-                            url += (result.problem.indexOf('<Create your own>') > -1 ? '' : '&p=' + result.problem);
-                        }
-
-                        share.attr('href', url);
-                        share.show();
                     });
                 }
 
@@ -99,7 +88,8 @@ if (Meteor.isClient) {
             //localStorage['selection'] = JSON.stringify(selection);
         }
 
-        $('#share').hide();
+        updateShareLink();
+        //$('#share').hide();
     }
 
     function onProblemChange(element) {
@@ -122,7 +112,21 @@ if (Meteor.isClient) {
             $('#txtProblemCode').val(problem.code);
         }
 
-        $('#share').hide();
+        updateShareLink();
+        //$('#share').hide();
+    }
+
+    function updateShareLink() {
+        // Display permalink.
+        var share = $('#share');
+        
+        var url = window.location.host + '?d=' + selection.domain;
+        if (selection.problem) {
+            url += (selection.problem.indexOf('<Create your own>') > -1 ? '' : '&p=' + selection.problem);
+        }
+
+        share.attr('href', url);
+        share.show();
     }
 
     function save(callback) {

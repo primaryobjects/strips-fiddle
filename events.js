@@ -85,6 +85,8 @@ if (Meteor.isClient) {
                 selection.domain = id;
                 //localStorage['selection'] = JSON.stringify(selection);
             }
+
+            $('#share').hide();
         }
     });
 
@@ -108,6 +110,8 @@ if (Meteor.isClient) {
                 template.find('#txtProblemName').value = problem.name;
                 template.find('#txtProblemCode').value = problem.code;
             }
+
+            $('#share').hide();            
         }
     });
 
@@ -123,11 +127,11 @@ if (Meteor.isClient) {
                     // Update problem, if one exists.
                     var problemId = $('#ctrlProblem').val();
                     if (problemId && problemId.indexOf('<Create your own>') == -1) {
-                        Meteor.call('updateProblem', problemId, txtProblemName, $('#txtProblemCode').val());
-
-                        if (callback) {
-                            callback({ domain: domainId, problem: problemId });
-                        }
+                        Meteor.call('updateProblem', problemId, txtProblemName, $('#txtProblemCode').val(), function() {
+                            if (callback) {
+                                callback({ domain: domainId, problem: problemId });
+                            }
+                        });
                     }
                     else if (txtProblemName) {
                         Meteor.call('addProblem', domainId, txtProblemName, $('#txtProblemCode').val(), function(err, problemId) {

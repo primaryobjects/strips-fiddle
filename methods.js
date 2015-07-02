@@ -53,7 +53,13 @@ Meteor.methods({
             throw new Meteor.Error("not-authorized");
         }
         else {
-            Problems.update({ _id: problem, user: Meteor.userId() }, { $set: { name: name, code: code } });
+            var func = Meteor.wrapAsync(function(callback) {
+                Problems.update({ _id: problem, user: Meteor.userId() }, { $set: { name: name, code: code } }, function(err, count) {
+                    callback(err, count);
+                });
+            });
+
+            return func();
         }
     }
 });

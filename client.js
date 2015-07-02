@@ -76,28 +76,16 @@ if (Meteor.isClient) {
         }, this));
     };
 
-    Template.layout.rendered = function() {
-        // Show validation and disable save button on invalid fields.
-        $('form').validator().on('submit', function (e) {
-            if (e.isDefaultPrevented()) {
-                e.preventDefault();
-                //e.stopImmediatePropagation();
-            }
-        });
+    Template.home.rendered = function() {
+        Meteor.MenuManager.update();
+    };
 
-        // Find the tab that matches the route.
-        var tab = $('.navbar-nav').find("li a[href='" + window.location.pathname + "']");
+    Template.about.rendered = function() {
+        Meteor.MenuManager.update();
+    };
 
-        // Highlight active menu for route.
-        tab.closest('li').addClass('active');
-
-        // Show/hide controls for route.
-        if (tab.text() == 'Home') {
-            $('li.controls').show();
-        }
-        else {
-            $('li.controls').hide();
-        }
+    Template.contact.rendered = function() {
+        Meteor.MenuManager.update();
     };
 
     // Access methods for database.

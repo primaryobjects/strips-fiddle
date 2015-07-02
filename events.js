@@ -1,7 +1,7 @@
 if (Meteor.isClient) {
     // Event handlers.
     Template.layout.events({
-        'click #navbar li.menu, click .navbar-brand, click #btnRun, submit': function(event, template) {
+        'click #btnRun, submit': function(event, template) {
             if (event.currentTarget.id == 'btnRun') {
                 // Run button click.
                 $('.panel-collapse.editor').collapse('hide');
@@ -28,27 +28,6 @@ if (Meteor.isClient) {
 
                 // Prevent actual form submisson.
                 return false;
-            }
-            else {
-                // Menu tab click.
-                var element = $(event.currentTarget);
-
-                if (event.currentTarget.className == 'navbar-brand') {
-                    element = $($('#navbar li')[0]);
-                }
-
-                // Remove active class from current tab.
-                $(template.find('#navbar li.active')).removeClass('active');
-
-                // Mark tab as active.
-                element.addClass('active');
-
-                if (element.text() == 'Home') {
-                    $('li.controls').show();
-                }
-                else {
-                    $('li.controls').hide();
-                }
             }
         }
     });

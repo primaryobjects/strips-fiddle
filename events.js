@@ -15,7 +15,15 @@ if (Meteor.isClient) {
                     $('#login-dropdown-list').find('a').trigger('click');
                 }
                 else {
-                    save();
+                    save(function(result) {
+                        var share = $('#share');
+                        
+                        var url = window.location.host + '?d=' + result.domain;
+                        url += (result.problem.indexOf('<Create your own>') > -1 ? '' : '&p=' + result.problem);
+
+                        share.attr('href', url);
+                        share.show();
+                    });
                 }
 
                 // Prevent actual form submisson.
@@ -36,10 +44,10 @@ if (Meteor.isClient) {
                 element.addClass('active');
 
                 if (element.text() == 'Home') {
-                    $('#btnRun').show();
+                    $('li.controls').show();
                 }
                 else {
-                    $('#btnRun').hide();
+                    $('li.controls').hide();
                 }
             }
         }
@@ -86,7 +94,7 @@ if (Meteor.isClient) {
         }
     });
 
-    function save() {
+    function save(callback) {
         var domainId = $('#ctrlDomain').val();
         var domainName = $('#ctrlDomain option:selected').text();
         var txtDomainName = $('#txtDomainName').val();
@@ -101,8 +109,16 @@ if (Meteor.isClient) {
                         Meteor.call('updateProblem', problemId, txtProblemName, $('#txtProblemCode').val());
                     }
                     else if (txtProblemName) {
-                        Meteor.call('addProblem', domainId, txtProblemName, $('#txtProblemCode').val());
-                    }                        
+                        Meteor.call('addProblem', domainId, txtProblemName, $('#txtProblemCode').val(), function(err, problemId) {
+                            if (callback) {
+                                callback({ domain: domainId, problem: problemId });
+                            }
+                        });
+                    }
+
+                    if (callback) {
+                        callback({ domain: domainId, problem: problemId });
+                    }
                 });
             }
             else {
@@ -111,7 +127,16 @@ if (Meteor.isClient) {
                     var problemId = $('#ctrlProblem').val();
 
                     if ((!problemId || problemId.indexOf('<Create your own>') != -1) && txtProblemName) {
-                        Meteor.call('addProblem', domainId, txtProblemName, $('#txtProblemCode').val());
+                        Meteor.call('addProblem', domainId, txtProblemName, $('#txtProblemCode').val(), function(err, problemId) {
+                            if (callback) {
+                                callback({ domain: domainId, problem: problemId });
+                            }
+                        });
+                    }
+                    else {
+                        if (callback) {
+                            callback({ domain: domainId, problem: problemId });
+                        }
                     }
                 });
             }

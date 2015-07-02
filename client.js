@@ -12,7 +12,10 @@ if (Meteor.isClient) {
     Router.configure({
         layoutTemplate: 'layout'
     });
-    Router.route('/', function() { this.render('home'); });
+    Router.route('/', function() {
+        selection = { domain: this.params.query.d, problem: this.params.query.p };
+        this.render('home');
+    });
     Router.route('/about');
     Router.route('/contact');
 
@@ -30,7 +33,13 @@ if (Meteor.isClient) {
 
             // Finally, the data has finished loading, we can now initialize the UI.
             Tracker.afterFlush(_.bind(function() {
-                dropdown.prop('selectedIndex', 1);
+                if (selection.domain) {
+                    dropdown.val(selection.domain);
+                }
+                else {
+                    dropdown.prop('selectedIndex', 1);
+                }
+
                 dropdown.trigger('change');
             }, this));
         }, this));
@@ -49,8 +58,14 @@ if (Meteor.isClient) {
 
             // Finally, the data has finished loading, we can now initialize the UI.
             Tracker.afterFlush(_.bind(function() {
-                // If "<Create your own>" was selected for the domain then this dropdown will have no other options, except for "<Create your own">, so just select index 0. Otherwise, pick the first available option at index 1.
-                dropdown.prop('selectedIndex', dropdown.children().length > 1 ? 1 : 0);
+                if (selection.problem) {
+                    dropdown.val(selection.problem);
+                }
+                else {
+                    // If "<Create your own>" was selected for the domain then this dropdown will have no other options, except for "<Create your own">, so just select index 0. Otherwise, pick the first available option at index 1.
+                    dropdown.prop('selectedIndex', dropdown.children().length > 1 ? 1 : 0);
+                }
+                
                 dropdown.trigger('change');
             }, this));
         }, this));

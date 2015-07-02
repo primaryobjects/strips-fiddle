@@ -21,7 +21,14 @@ Meteor.methods({
             throw new Meteor.Error("not-authorized");
         }
         else {
-            Problems.insert({ user: Meteor.userId(),  domain: domain, name: name, code: code });
+            // Wrap the async db method so we can return the result value in the callback.
+            var func = Meteor.wrapAsync(function(callback) {
+                Problems.insert({ user: Meteor.userId(),  domain: domain, name: name, code: code }, function(err, id) {
+                    callback(err, id);
+                });
+            });
+
+            return func();
         }
     },
 

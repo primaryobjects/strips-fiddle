@@ -18,7 +18,7 @@ if (Meteor.isClient) {
                     save(function(result) {
                         // Update preferences.
                         selection = result;
-                        localStorage['selection'] = JSON.stringify(selection);
+                        //localStorage['selection'] = JSON.stringify(selection);
                         $('#ctrlDomain').val(result.domain).trigger('change');
                         $('#ctrlProblem').val(result.problem).trigger('change');
 
@@ -26,7 +26,9 @@ if (Meteor.isClient) {
                         var share = $('#share');
                         
                         var url = window.location.host + '?d=' + result.domain;
-                        url += (result.problem.indexOf('<Create your own>') > -1 ? '' : '&p=' + result.problem);
+                        if (result.problem) {
+                            url += (result.problem.indexOf('<Create your own>') > -1 ? '' : '&p=' + result.problem);
+                        }
 
                         share.attr('href', url);
                         share.show();
@@ -81,7 +83,7 @@ if (Meteor.isClient) {
 
                 // Remember dropdown selection.
                 selection.domain = id;
-                localStorage['selection'] = JSON.stringify(selection);
+                //localStorage['selection'] = JSON.stringify(selection);
             }
         }
     });
@@ -96,15 +98,15 @@ if (Meteor.isClient) {
                 // Find the problem in the db that matches the selected id.
                 if (event.target.selectedIndex > 0) {
                     problem = Problems.findOne({ _id: id });
+
+                    // Remember dropdown selection.
+                    selection.problem = id;
+                    //localStorage['selection'] = JSON.stringify(selection);                    
                 }
 
                 // Populate the name and code for the problem.
                 template.find('#txtProblemName').value = problem.name;
                 template.find('#txtProblemCode').value = problem.code;
-
-                // Remember dropdown selection.
-                selection.problem = id;
-                localStorage['selection'] = JSON.stringify(selection);
             }
         }
     });
@@ -133,6 +135,11 @@ if (Meteor.isClient) {
                                 callback({ domain: domainId, problem: problemId });
                             }
                         });
+                    }
+                    else {
+                        if (callback) {
+                            callback({ domain: domainId, problem: null });
+                        }                        
                     }
                 });
             }

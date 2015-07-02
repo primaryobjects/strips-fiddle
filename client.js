@@ -14,9 +14,9 @@ if (Meteor.isClient) {
     });
     Router.route('/', function() {
         selection = { domain: this.params.query.d, problem: this.params.query.p };
-        if (!selection.domain && localStorage['selection']) {
+        /*if (!selection.domain && localStorage['selection']) {
             selection = JSON.parse(localStorage['selection']);
-        }
+        }*/
 
         this.render('home');
     });
@@ -62,7 +62,8 @@ if (Meteor.isClient) {
 
             // Finally, the data has finished loading, we can now initialize the UI.
             Tracker.afterFlush(_.bind(function() {
-                if (selection.problem) {
+                if (selection.problem && dropdown.find("option[value='" + selection.problem + "']").length > 0) {
+                    // We can select a value in the dropdown.
                     dropdown.val(selection.problem);
                 }
                 else {

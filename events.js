@@ -16,6 +16,13 @@ if (Meteor.isClient) {
                 }
                 else {
                     save(function(result) {
+                        // Update preferences.
+                        selection = result;
+                        localStorage['selection'] = JSON.stringify(selection);
+                        $('#ctrlDomain').val(result.domain).trigger('change');
+                        $('#ctrlProblem').val(result.problem).trigger('change');
+
+                        // Display permalink.
                         var share = $('#share');
                         
                         var url = window.location.host + '?d=' + result.domain;
@@ -71,6 +78,10 @@ if (Meteor.isClient) {
 
                 // Update problem dropdown.
                 Session.set('domainId', id);
+
+                // Remember dropdown selection.
+                selection.domain = id;
+                localStorage['selection'] = JSON.stringify(selection);
             }
         }
     });
@@ -90,6 +101,10 @@ if (Meteor.isClient) {
                 // Populate the name and code for the problem.
                 template.find('#txtProblemName').value = problem.name;
                 template.find('#txtProblemCode').value = problem.code;
+
+                // Remember dropdown selection.
+                selection.problem = id;
+                localStorage['selection'] = JSON.stringify(selection);
             }
         }
     });
@@ -107,6 +122,10 @@ if (Meteor.isClient) {
                     var problemId = $('#ctrlProblem').val();
                     if (problemId && problemId.indexOf('<Create your own>') == -1) {
                         Meteor.call('updateProblem', problemId, txtProblemName, $('#txtProblemCode').val());
+
+                        if (callback) {
+                            callback({ domain: domainId, problem: problemId });
+                        }
                     }
                     else if (txtProblemName) {
                         Meteor.call('addProblem', domainId, txtProblemName, $('#txtProblemCode').val(), function(err, problemId) {
@@ -114,10 +133,6 @@ if (Meteor.isClient) {
                                 callback({ domain: domainId, problem: problemId });
                             }
                         });
-                    }
-
-                    if (callback) {
-                        callback({ domain: domainId, problem: problemId });
                     }
                 });
             }

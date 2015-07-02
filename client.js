@@ -14,6 +14,10 @@ if (Meteor.isClient) {
     });
     Router.route('/', function() {
         selection = { domain: this.params.query.d, problem: this.params.query.p };
+        if (!selection.domain && localStorage['selection']) {
+            selection = JSON.parse(localStorage['selection']);
+        }
+
         this.render('home');
     });
     Router.route('/about');

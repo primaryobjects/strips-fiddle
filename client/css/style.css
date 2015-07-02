@@ -32,3 +32,11 @@ input[type='text'], select.form-control {
 .panel-heading:hover h3 {
     text-decoration: underline;
 }
+
+#share {
+    color: #ccaaff;
+}
+
+#share:hover {
+    color: #eeccff;
+}

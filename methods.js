@@ -7,7 +7,7 @@ Meteor.methods({
         else {
             // Wrap the async db method so we can return the result value in the callback.
             var func = Meteor.wrapAsync(function(callback) {
-                Domains.insert({ user: Meteor.userId(),  name: name, code: code }, function(err, id) {
+                Domains.insert({ created: new Date(), user: Meteor.userId(),  name: name, code: code }, function(err, id) {
                     callback(err, id);
                 });
             });
@@ -23,7 +23,7 @@ Meteor.methods({
         else {
             // Wrap the async db method so we can return the result value in the callback.
             var func = Meteor.wrapAsync(function(callback) {
-                Problems.insert({ user: Meteor.userId(),  domain: domain, name: name, code: code }, function(err, id) {
+                Problems.insert({ created: new Date(), user: Meteor.userId(),  domain: domain, name: name, code: code }, function(err, id) {
                     callback(err, id);
                 });
             });
@@ -39,7 +39,7 @@ Meteor.methods({
         else {
             // Wrap the async db method so we can return the result value in the callback.
             var func = Meteor.wrapAsync(function(callback) {
-                Domains.update({ _id: domain, user: Meteor.userId() }, { $set: { name: name, code: code } }, function(err, count) {
+                Domains.update({ _id: domain, user: Meteor.userId() }, { $set: { lastModified: new Date(), name: name, code: code } }, function(err, count) {
                     callback(err, count);
                 });
             });
@@ -54,7 +54,7 @@ Meteor.methods({
         }
         else {
             var func = Meteor.wrapAsync(function(callback) {
-                Problems.update({ _id: problem, user: Meteor.userId() }, { $set: { name: name, code: code } }, function(err, count) {
+                Problems.update({ _id: problem, user: Meteor.userId() }, { $set: { lastModified: new Date(), name: name, code: code } }, function(err, count) {
                     callback(err, count);
                 });
             });

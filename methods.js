@@ -42,9 +42,9 @@ Meteor.methods({
                 Domains.update({ _id: domain, user: Meteor.userId() }, { $set: { lastModified: new Date(), name: name, code: code } }, function(err, count) {
                     if (!count) {
                         // Domain not found, must exist for 'public' user. Copy and insert under this user.
-                        Domains.insert({ created: new Date(), user: Meteor.userId(),  name: 'Copy of ' + name, code: code }, function(err, id) {
+                        Meteor.call('addDomain', 'Copy of ' + name, code, function (err, id) {
                             callback(err, id);
-                        });                        
+                        });
                     }
                     else {
                         callback(err, domain);
@@ -65,9 +65,9 @@ Meteor.methods({
                 Problems.update({ _id: problem, user: Meteor.userId() }, { $set: { lastModified: new Date(), name: name, code: code } }, function(err, count) {
                     if (!count) {
                         // Problem not found, must exist for 'public' user. Copy and insert under this user.
-                        Problems.insert({ created: new Date(), user: Meteor.userId(), domain: domain, name: name, code: code }, function(err, id) {
+                        Meteor.call('addProblem', domain, 'Copy of ' + name, code, function (err, id) {
                             callback(err, id);
-                        });                        
+                        });
                     }
                     else {
                         callback(err, problem);

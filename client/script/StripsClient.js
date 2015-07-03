@@ -1,7 +1,7 @@
 StripsClient = {
     run: function(domain, problem, alg) {
         // Clear output panel.
-        $('#output').text('');
+        $('#output').html("<p style='color: #a0a0a0;'>Initializing, this may take a couple of seconds or minutes, depending upon the domain. Please wait ..</p>");
 
         // Setup STRIPS.
         StripsManager.verbose = true;

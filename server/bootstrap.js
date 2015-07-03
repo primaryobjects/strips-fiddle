@@ -13,6 +13,7 @@ Meteor.startup(function() {
         // Create sample data.
         var domains = [
             {
+                created: new Date(),
                 user: 'public',
                 name: 'blocksworld1',
                 code: '(define (domain blocksworld)\n' +
@@ -24,6 +25,7 @@ Meteor.startup(function() {
                       ')'
             },
             {
+                created: new Date(),
                 user: 'public',
                 name: 'blocksworld2',
                 code: '(define (domain blocksworld)\n' +
@@ -55,6 +57,7 @@ Meteor.startup(function() {
         var domainsData = Domains.find().fetch();
         var problems = [
             {
+                created: new Date(),
                 user: 'public',
                 domain: domainsData[0]._id,
                 name: 'move-blocks-from-a-to-b',
@@ -66,6 +69,7 @@ Meteor.startup(function() {
                         ')'
             },
             {
+                created: new Date(),
                 user: 'public',
                 domain: domainsData[1]._id,
                 name: 'stack-blocks-ab-from-tablex-to-ab-tabley',
@@ -80,6 +84,7 @@ Meteor.startup(function() {
                         ')'
             },
             {
+                created: new Date(),
                 user: 'public',
                 domain: domainsData[1]._id,
                 name: 'stack-blocks-stacked-ba-from-tablex-to-stacked-ab-tabley',

@@ -1,5 +1,5 @@
 StripsClient = {
-    run: function(domain, problem) {
+    run: function(domain, problem, alg) {
         // Clear output panel.
         $('#output').text('');
 
@@ -11,7 +11,7 @@ StripsClient = {
         // Load the domain and problem.
         StripsManager.load(domain, problem, function(domain, problem) {
             // Run the problem against the domain.
-            var solutions = StripsManager.solve(domain, problem);
+            var solutions = StripsManager.solve(domain, problem, alg == 'DFS');
 
             // Display each solution.
             for (var i in solutions) {

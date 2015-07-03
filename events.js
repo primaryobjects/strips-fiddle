@@ -1,13 +1,18 @@
 if (Meteor.isClient) {
     // Event handlers.
     Template.layout.events({
-        'click #btnRun, submit': function(event, template) {
+        'click #btnRun, click .alg, submit': function(event, template) {
             if (event.currentTarget.id == 'btnRun') {
                 // Run button click.
                 $('.panel-collapse.editor').collapse('hide');
                 $('#outputPanel').collapse('show');
 
-                StripsClient.run($('#txtDomainCode').val(), $('#txtProblemCode').val());
+                StripsClient.run($('#txtDomainCode').val(), $('#txtProblemCode').val(), $('.alg.active').text());
+            }
+            else if (event.currentTarget.className.indexOf('alg') != -1) {
+                // Toggle algorithm buttons.
+                $('.alg').removeClass('active');
+                $(event.currentTarget).addClass('active');
             }
             else if (event.type == 'submit') {
                 // Save button click.

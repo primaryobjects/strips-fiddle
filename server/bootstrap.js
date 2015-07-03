@@ -1,11 +1,11 @@
 Meteor.startup(function() {
     Meteor.publish('Domains', function() {
-        return Domains.find({ user: this.userId || 'public' });
+        return Domains.find({ $or: [{ user: this.userId }, { user: 'public' }] });
     });
     
     Meteor.publish('Problems', function(domainId) {
         if (domainId) {
-            return Problems.find({ user: this.userId || 'public', domain: domainId });
+            return Problems.find({ $or: [{ user: this.userId }, { user: 'public' }], domain: domainId });
         }
     });
 

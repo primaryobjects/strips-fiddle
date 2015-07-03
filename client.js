@@ -13,7 +13,7 @@ if (Meteor.isClient) {
         layoutTemplate: 'layout'
     });
     Router.route('/', function() {
-        selection = { domain: this.params.query.d, problem: this.params.query.p };
+        selection = { domain: this.params.query.d, problem: this.params.query.p, algorithm: this.params.query.a };
         /*if (!selection.domain && localStorage['selection']) {
             selection = JSON.parse(localStorage['selection']);
         }*/
@@ -75,6 +75,14 @@ if (Meteor.isClient) {
             }, this));
         }, this));
     };
+
+    Template.layout.rendered = function() {
+        // Select algorithm toggle button, based on url parameter.
+        if (selection && selection.algorithm) {
+            $('.alg').removeClass('active');
+            $(".alg:contains('" + selection.algorithm + "')").addClass('active');
+        }
+    }
 
     Template.home.rendered = function() {
         Meteor.MenuManager.update();

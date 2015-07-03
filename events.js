@@ -13,6 +13,8 @@ if (Meteor.isClient) {
                 // Toggle algorithm buttons.
                 $('.alg').removeClass('active');
                 $(event.currentTarget).addClass('active');
+
+                updateShareLink();
             }
             else if (event.type == 'submit') {
                 // Save button click.
@@ -110,6 +112,8 @@ if (Meteor.isClient) {
         if (selection.problem && $('#ctrlProblem').prop('selectedIndex') > 0) {
             url += '&p=' + selection.problem;
         }
+
+        url += '&a=' + $('.alg.active').text();
 
         share.attr('href', url);
 

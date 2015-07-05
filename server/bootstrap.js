@@ -33,7 +33,7 @@ Meteor.startup(function() {
             {
                 created: new Date(),
                 user: 'public',
-                name: 'blocksworld1',
+                name: 'Blocksworld1',
                 code: '(define (domain blocksworld)\n' +
                       '  (:requirements :strips)\n' +
                       '  (:action move\n' +
@@ -45,7 +45,7 @@ Meteor.startup(function() {
             {
                 created: new Date(),
                 user: 'public',
-                name: 'blocksworld2',
+                name: 'Blocksworld2',
                 code: '(define (domain blocksworld)\n' +
                       '(:requirements :strips :typing)\n' +
                       '(:types block table)\n' +
@@ -130,7 +130,7 @@ Meteor.startup(function() {
         var domain;
         var func = Meteor.wrapAsync(function(callback) {
           downloadUrl('https://raw.githubusercontent.com/primaryobjects/strips/master/examples/cake/domain.pddl', function(text) {
-            domain = { created: new Date(), user: 'public', name: 'cake', code: text };
+            domain = { created: new Date(), user: 'public', name: 'Cake', code: text };
 
             Domains.insert(domain, function(err, id) {
               downloadUrl('https://raw.githubusercontent.com/primaryobjects/strips/master/examples/cake/problem.pddl', function(text) {

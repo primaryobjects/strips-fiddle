@@ -6,6 +6,19 @@ if (Meteor.isClient) {
     Router.route('/', function() { this.render('home'); });
     Router.route('/about');
     Router.route('/contact');
+    Router.onAfterAction(function() {
+        var title = '';
+
+        switch (this.route.path()) {
+            case '/': title = 'STRIPS-Fiddle | Run Automated Planning Programs in your Web Browser with PDDL'; break;
+            case '/about': title = 'About' + ' | STRIPS-Fiddle'; break;
+            case '/contact': title = 'Contact' + ' | STRIPS-Fiddle'; break;
+        }
+
+        if (title) {
+            document.title = title;
+        }
+    });
 
     // Check url for shared parameters.
     selection = { domain: getUrlParameter('d'), problem: getUrlParameter('p'), algorithm: getUrlParameter('a') };

@@ -1,7 +1,7 @@
 if (Meteor.isClient) {
     // Event handlers.
     Template.layout.events({
-        'click #btnRun, click .alg, submit': function(event, template) {
+        'click #btnRun, click .alg, click #share, submit': function(event, template) {
             if (event.currentTarget.id == 'btnRun') {
                 // Run button click.
                 $('.panel-collapse.editor').collapse('hide');
@@ -15,6 +15,17 @@ if (Meteor.isClient) {
                 $(event.currentTarget).addClass('active');
 
                 updateShareLink();
+            }
+            else if (event.currentTarget.id == 'share') {
+                var modal = $('#shareModal .modal-body');
+                modal.find('.domain').text($('#txtDomainName').val());
+                modal.find('.problem').text($('#txtProblemName').val());
+                modal.find('.link').attr('href', $(event.currentTarget).attr('href'));
+                modal.find('.linkText').text($(event.currentTarget).attr('href'))
+
+                $('#shareModal').modal('show');
+
+                return false;
             }
             else if (event.type == 'submit') {
                 // Save button click.

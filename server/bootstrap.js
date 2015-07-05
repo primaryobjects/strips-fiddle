@@ -1,12 +1,30 @@
 Meteor.startup(function() {
-    Meteor.publish('Domains', function() {
-        return Domains.find({ $or: [{ user: this.userId }, { user: 'public' }] });
+    Meteor.publish('Domains', function(selection) {
+        var result = null;
+
+        if (selection && selection.domain) {
+            result = Domains.find({ $or: [{ user: this.userId }, { user: 'public' }, { _id: selection.domain }] });
+        }
+        else {
+            result = Domains.find({ $or: [{ user: this.userId }, { user: 'public' }] });
+        }
+
+        return result;
     });
     
-    Meteor.publish('Problems', function(domainId) {
+    Meteor.publish('Problems', function(domainId, selection) {
+        var result = null;
+
         if (domainId) {
-            return Problems.find({ $or: [{ user: this.userId }, { user: 'public' }], domain: domainId });
+            if (selection && selection.problem) {
+                result = Problems.find({ $or: [{ user: this.userId }, { user: 'public' }, { _id: selection.problem }], domain: domainId });
+            }
+            else {
+                result = Problems.find({ $or: [{ user: this.userId }, { user: 'public' }], domain: domainId });
+            }
         }
+
+        return result;
     });
 
     if (Domains.find().count() == 0) {

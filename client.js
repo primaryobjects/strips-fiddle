@@ -1,27 +1,23 @@
 if (Meteor.isClient) {
-    // Setup database access.
-    Meteor.subscribe('Domains');
-    Meteor.subscribe('Problems');
-
-    // Bind to changes to the 'domain' session variable so we can update the Problem dropdown when the Domain dropdown changes.
-    Meteor.autosubscribe(function() {
-        Meteor.subscribe('Problems', Session.get('domainId'));
-    });
-
     // Setup routing.
     Router.configure({
         layoutTemplate: 'layout'
     });
-    Router.route('/', function() {
-        selection = { domain: this.params.query.d, problem: this.params.query.p, algorithm: this.params.query.a };
-        /*if (!selection.domain && localStorage['selection']) {
-            selection = JSON.parse(localStorage['selection']);
-        }*/
-
-        this.render('home');
-    });
+    Router.route('/', function() { this.render('home'); });
     Router.route('/about');
     Router.route('/contact');
+
+    // Check url for shared parameters.
+    selection = { domain: getUrlParameter('d'), problem: getUrlParameter('p'), algorithm: getUrlParameter('a') };
+    Session.set('selection', selection);
+
+    // Setup database access.
+    Meteor.subscribe('Domains', Session.get('selection'));
+
+    // Bind to changes to the 'domain' session variable so we can update the Problem dropdown when the Domain dropdown changes.
+    Meteor.autosubscribe(function() {
+        Meteor.subscribe('Problems', Session.get('domainId'), Session.get('selection'));
+    });
 
     // Wait for data to load before initializing dropdowns upon page-load.
     Template.domainForm.rendered = function() {
@@ -113,4 +109,12 @@ if (Meteor.isClient) {
     Template.problemForm.helpers({
         problems: problems()
     });
+
+    function getUrlParameter(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+        var results = regex.exec(location.search);
+
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }    
 }

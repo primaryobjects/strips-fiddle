@@ -172,19 +172,19 @@ Meteor.startup(function() {
 
             Domains.insert(domain, function(err, id) {
               downloadUrl('https://raw.githubusercontent.com/primaryobjects/strips/master/examples/starcraft/barracks.txt', function(text) {
-                var problem = { created: new Date(), user: 'public', domain: id, name: 'Build Barracks', code: text };
+                var problem = { created: new Date(), user: 'public', domain: id, name: 'Barracks', code: text };
                 Problems.insert(problem);
 
                 downloadUrl('https://raw.githubusercontent.com/primaryobjects/strips/master/examples/starcraft/marine.txt', function(text) {
-                  problem = { created: new Date(), user: 'public', domain: id, name: 'Train Marine', code: text };
+                  problem = { created: new Date(), user: 'public', domain: id, name: 'Marine', code: text };
                   Problems.insert(problem);
 
                   downloadUrl('https://raw.githubusercontent.com/primaryobjects/strips/master/examples/starcraft/tank.txt', function(text) {
-                    problem = { created: new Date(), user: 'public', domain: id, name: 'Train Tank', code: text };
+                    problem = { created: new Date(), user: 'public', domain: id, name: 'Tank', code: text };
                     Problems.insert(problem);
 
                     downloadUrl('https://raw.githubusercontent.com/primaryobjects/strips/master/examples/starcraft/wraith.txt', function(text) {
-                      problem = { created: new Date(), user: 'public', domain: id, name: 'Train Wraith', code: text };
+                      problem = { created: new Date(), user: 'public', domain: id, name: 'Wraith', code: text };
                       Problems.insert(problem);
 
                       callback(null, 'starcraft');

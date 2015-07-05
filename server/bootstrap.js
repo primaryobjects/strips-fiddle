@@ -122,5 +122,88 @@ Meteor.startup(function() {
         problems.forEach(function(problem) {
             Problems.insert(problem);
         });        
+
+        domains = [];
+        problems = [];
+
+        // Extra stuff from github.
+        var domain;
+        var func = Meteor.wrapAsync(function(callback) {
+          downloadUrl('https://raw.githubusercontent.com/primaryobjects/strips/master/examples/cake/domain.pddl', function(text) {
+            domain = { created: new Date(), user: 'public', name: 'cake', code: text };
+
+            Domains.insert(domain, function(err, id) {
+              downloadUrl('https://raw.githubusercontent.com/primaryobjects/strips/master/examples/cake/problem.pddl', function(text) {
+                var problem = { created: new Date(), user: 'public', domain: id, name: 'Have Cake and Eat It Too', code: text };
+                Problems.insert(problem);
+
+                callback(null, 'cake');
+              });
+            });
+          });
+        });
+
+        func(function(err, result) {
+          console.log('done.');
+        });
+
+        var func = Meteor.wrapAsync(function(callback) {
+          downloadUrl('https://raw.githubusercontent.com/primaryobjects/strips/master/examples/dinner/domain.pddl', function(text) {
+            domain = { created: new Date(), user: 'public', name: 'Birthday Dinner', code: text };
+
+            Domains.insert(domain, function(err, id) {
+              downloadUrl('https://raw.githubusercontent.com/primaryobjects/strips/master/examples/dinner/problem.pddl', function(text) {
+                var problem = { created: new Date(), user: 'public', domain: id, name: 'Cook Dinner and Wrap a Present', code: text };
+                Problems.insert(problem);
+
+                callback(null, 'dinner');
+              });
+            });
+          });
+        });
+
+        func(function(err, result) {
+          console.log('done.');
+        });
+
+        var func = Meteor.wrapAsync(function(callback) {
+          downloadUrl('https://raw.githubusercontent.com/primaryobjects/strips/master/examples/starcraft/domain.txt', function(text) {
+            domain = { created: new Date(), user: 'public', name: 'Starcraft', code: text };
+
+            Domains.insert(domain, function(err, id) {
+              downloadUrl('https://raw.githubusercontent.com/primaryobjects/strips/master/examples/starcraft/barracks.txt', function(text) {
+                var problem = { created: new Date(), user: 'public', domain: id, name: 'Build Barracks', code: text };
+                Problems.insert(problem);
+
+                downloadUrl('https://raw.githubusercontent.com/primaryobjects/strips/master/examples/starcraft/marine.txt', function(text) {
+                  problem = { created: new Date(), user: 'public', domain: id, name: 'Train Marine', code: text };
+                  Problems.insert(problem);
+
+                  downloadUrl('https://raw.githubusercontent.com/primaryobjects/strips/master/examples/starcraft/tank.txt', function(text) {
+                    problem = { created: new Date(), user: 'public', domain: id, name: 'Train Tank', code: text };
+                    Problems.insert(problem);
+
+                    downloadUrl('https://raw.githubusercontent.com/primaryobjects/strips/master/examples/starcraft/wraith.txt', function(text) {
+                      problem = { created: new Date(), user: 'public', domain: id, name: 'Train Wraith', code: text };
+                      Problems.insert(problem);
+
+                      callback(null, 'starcraft');
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+
+        func(function(err, result) {
+          console.log('done.');
+        });
+    }
+
+    function downloadUrl(url, callback) {
+      Meteor.http.call('GET', url, function (err, result) {
+        callback(result.content);
+      });
     }
 })

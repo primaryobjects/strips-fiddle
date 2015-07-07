@@ -50,6 +50,18 @@ if (Meteor.isClient) {
         }
     });
 
+    Template.home.events({
+        'click #top': function(event, template) {
+            // Scroll to top of page.
+            $('#domainPanel').collapse('show');
+            $('#problemPanel').collapse('show');
+            $('#outputPanel').collapse('hide');
+            
+            $('html, body').stop().animate({ scrollTop: $('html, body').offset().top }, 1000, function() {
+            });
+        }
+    });
+
     Template.domainForm.events({
         'change #ctrlDomain': function(event, template) {
             onDomainChange($(event.target));

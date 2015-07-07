@@ -20,5 +20,8 @@ StripsClient = {
     log: function(text) {
         // Display text in the output panel.
         $('#output').append('<p>' + text + '</p>');
+
+        // Scroll to bottom of output.
+        $('html, body').stop().animate({ scrollTop: $('#output').offset().top + $('#output')[0].scrollHeight }, 0);
     }
 }

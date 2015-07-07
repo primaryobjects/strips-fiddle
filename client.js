@@ -10,7 +10,7 @@ if (Meteor.isClient) {
         var title = '';
 
         switch (this.route.path()) {
-            case '/': title = 'STRIPS-Fiddle | Run Automated Planning Programs in your Web Browser with PDDL'; break;
+            case '/': title = 'STRIPS-Fiddle | Run Automated Planning Programs in your Browser, PDDL'; break;
             case '/about': title = 'About' + ' | STRIPS-Fiddle'; break;
             case '/contact': title = 'Contact' + ' | STRIPS-Fiddle'; break;
         }

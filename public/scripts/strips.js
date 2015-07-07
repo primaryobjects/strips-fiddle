@@ -22,7 +22,7 @@ StripsClientWorker = {
                     postMessage('<h4>Solution found in ' + solution.steps + ' steps!</h4>');
                     for (var i = 0; i < solution.path.length; i++) {
                         postMessage('<b>' + (i + 1) + '</b>. ' + solution.path[i]);
-                    }        
+                    }
                 }
             }, true);
         }

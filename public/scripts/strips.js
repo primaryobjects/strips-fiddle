@@ -1,3 +1,46 @@
+/* HTML5 Web Worker */
+StripsClientWorker = {
+    run: function(domain, problem, alg) {
+        // Clear output panel.
+        postMessage("<p style='color: #a0a0a0;'>Initializing, this may take a couple of seconds or minutes, depending upon the domain. Please wait ..</p>");
+
+        // Setup STRIPS.
+        StripsManager.verbose = true;
+        StripsManager.output = function(text) { postMessage(text); }
+
+        try {
+            // Load the domain and problem.
+            StripsManager.load(domain, problem, function(domain, problem) {
+                // Run the problem against the domain.
+                var solutions = StripsManager.solve(domain, problem, alg == 'DFS');
+
+                // Display each solution.
+                for (var i in solutions) {
+                    var solution = solutions[i];
+
+                    postMessage('<p>&nbsp;</p>');
+                    postMessage('<h4>Solution found in ' + solution.steps + ' steps!</h4>');
+                    for (var i = 0; i < solution.path.length; i++) {
+                        postMessage('<b>' + (i + 1) + '</b>. ' + solution.path[i]);
+                    }        
+                }
+            }, true);
+        }
+        catch (excep) {
+            postMessage(excep.message);
+        }
+    }
+}
+
+addEventListener('message', function (event) {
+    StripsClientWorker.run(event.data.domain, event.data.problem, event.data.alg);
+});
+/* End HTML5 Web Worker */
+
+/***
+strips - ported via Browserify
+***/
+
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 
 },{}],2:[function(require,module,exports){
@@ -6134,21 +6177,26 @@ StripsManager = {
         // Applies a PEG.js grammar against a code string and returns the parsed JSON result.
         //fs.readFile(grammarFileName, 'utf8', function(err, grammar) {
         //    if (err) throw err;
-        $.ajax({
-          url: grammarFileName,
-          success: function(grammar) {
-            var parser = PEG.buildParser(grammar);
-         
-            if (callback) {
-                try {
-                  callback(parser.parse(code));
-                }
-                catch (excep) {
-                  StripsManager.output(excep.message);
-                }
-            }            
-          }
-        })         
+        var xmlhttp = new XMLHttpRequest();
+        var url = grammarFileName;
+
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                var grammar = xmlhttp.responseText;
+                var parser = PEG.buildParser(grammar);
+             
+                if (callback) {
+                    try {
+                      callback(parser.parse(code));
+                    }
+                    catch (excep) {
+                      StripsManager.output(excep.message);
+                    }
+                }            
+            }
+        }
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
         //});
     },
 

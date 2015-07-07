@@ -1,33 +1,20 @@
 StripsClient = {
+    worker: null,
+
     run: function(domain, problem, alg) {
+        // Create an HTML5 web worker.
+        StripsClient.worker = new Worker('/scripts/strips.js');
+
+        // Setup web worker event handler, to receive output messages.
+        StripsClient.worker.onmessage = function(event) {
+            StripsClient.log(event.data);
+        }
+
         // Clear output panel.
-        $('#output').html("<p style='color: #a0a0a0;'>Initializing, this may take a couple of seconds or minutes, depending upon the domain. Please wait ..</p>");
+		$('#output').text('');
 
-        // Setup STRIPS.
-        StripsManager.verbose = true;
-        StripsManager.output = StripsClient.log;
-
-        try {
-        // Load the domain and problem.
-        StripsManager.load(domain, problem, function(domain, problem) {
-            // Run the problem against the domain.
-            var solutions = StripsManager.solve(domain, problem, alg == 'DFS');
-
-            // Display each solution.
-            for (var i in solutions) {
-                var solution = solutions[i];
-
-                StripsClient.log('<p>&nbsp;</p>');
-                StripsClient.log('<h4>Solution found in ' + solution.steps + ' steps!</h4>');
-                for (var i = 0; i < solution.path.length; i++) {
-                    StripsClient.log('<b>' + (i + 1) + '</b>. ' + solution.path[i]);
-                }        
-            }
-        }, true);
-        }
-        catch (excep) {
-            StripsClient.log(excep.message);
-        }
+        // Start strips, by posting a message to the web worker with our arguments.
+        StripsClient.worker.postMessage({ name: 'run', domain: domain, problem: problem, alg: alg });
     },
 
     log: function(text) {

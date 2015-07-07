@@ -28,182 +28,146 @@ Meteor.startup(function() {
     });
 
     if (Domains.find().count() == 0) {
-        // Create sample data.
-        var domains = [
-            {
-                created: new Date(),
-                user: 'public',
-                name: 'Blocksworld1',
-                code: '(define (domain blocksworld)\n' +
-                      '  (:requirements :strips)\n' +
-                      '  (:action move\n' +
-                      '   :parameters (?b ?t1 ?t2)\n' +
-                      '   :precondition (and (block ?b) (table ?t1) (table ?t2) (on ?b ?t1) (not (on ?b ?t2))\n' +
-                      '   :effect (and (on ?b ?t2)) (not (on ?b ?t1))))\n' +
-                      ')'
-            },
-            {
-                created: new Date(),
-                user: 'public',
-                name: 'Blocksworld2',
-                code: '(define (domain blocksworld)\n' +
-                      '(:requirements :strips :typing)\n' +
-                      '(:types block table)\n' +
-                      '(:action move\n' +
-                      '   :parameters (?b - block ?t1 - table ?t2 - table)\n' +
-                      '   :precondition (and (block ?b) (table ?t1) (table ?t2) (on ?b ?t1) not (on ?b ?t2) (clear ?b))\n' +
-                      '   :effect (and (on ?b ?t2)) (not (on ?b ?t1))))\n' +
-                      '(:action stack\n' +
-                      '   :parameters (?a - block ?b - block ?t1 - table)\n' +
-                      '   :precondition (and (block ?a) (block ?b) (table ?t1) (clear ?a) (clear ?b) (on ?a ?t1) (on ?b ?t1))\n' +
-                      '   :effect (and (on ?a ?b) not (on ?a ?t1) not (clear ?b))\n' +
-                      '   )\n' +
-                      '(:action unstack\n' +
-                      '   :parameters (?a - block ?b - block ?t1 - table)\n' +
-                      '   :precondition (and (block ?a) (block ?b) (table ?t1) (on ?b ?t1) (clear ?a) (on ?a ?b))\n' +
-                      '   :effect (and (on ?a ?t1) not (on ?a ?b) (clear ?b))\n' +
-                      '   )\n' +
-                      ')'
-            }
-        ];
+        var domains = [];
 
-        // Insert sample data into db.
-        domains.forEach(function(domain) {
-            Domains.insert(domain);
-        });
+        domains.push(loadDomainAndProblemsByUrl(
+            { name: 'Starcraft', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/starcraft/domain.txt' },
+            [
+                { name: 'Barracks', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/starcraft/barracks.txt'},
+                { name: 'Marine', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/starcraft/marine.txt'},
+                { name: 'Tank', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/starcraft/tank.txt'},
+                { name: 'Wraith', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/starcraft/wraith.txt'}
+            ]
+        ));
 
-        var domainsData = Domains.find().fetch();
-        var problems = [
-            {
-                created: new Date(),
-                user: 'public',
-                domain: domainsData[0]._id,
-                name: 'move-blocks-from-a-to-b',
-                code: '(define (problem move-blocks-from-a-to-b)\n' +
-                        '(:domain blocksworld)\n' +
-                        '(:init (and (block a) (block b) (table x) (table y)\n' +
-                        '      (on a x) (on b x)))\n' +
-                        '(:goal (and (on a y) (on b y)))\n' +
-                        ')'
-            },
-            {
-                created: new Date(),
-                user: 'public',
-                domain: domainsData[1]._id,
-                name: 'stack-blocks-ab-from-tablex-to-ab-tabley',
-                code: '(define (problem stack-blocks-a-b-from-tablex-to-ab-tabley)\n' +
-                          '(:domain blocksworld)\n' +
-                          '(:objects\n' +
-                          '  a b - block\n' +
-                          '  x y - table)\n' +
-                          '(:init (and (block a) (block b) (table x) (table y)\n' +
-                          '       (on a x) (on b x) (clear a) (clear b)))\n' +
-                          '(:goal (and (on a b) (on b y) (clear a) not (clear b)))\n' +
-                        ')'
-            },
-            {
-                created: new Date(),
-                user: 'public',
-                domain: domainsData[1]._id,
-                name: 'stack-blocks-stacked-ba-from-tablex-to-stacked-ab-tabley',
-                code: '(define (problem stack-blocks-stacked-ba-from-tablex-to-stacked-ab-tabley)\n' +
-                        '(:domain blocksworld)\n' +
-                        '(:objects\n' +
-                        '  a b - block\n' +
-                        '  x y - table)\n' +
-                        '(:init (and (block a) (block b) (table x) (table y)\n' +
-                        '       (on a x) (on b a) (clear b)))\n' +
-                        '(:goal (and (on b y) (on a b) (clear a) not (clear b)))\n' +
-                        ')'
-            }
-        ];
+        domains.push(loadDomainAndProblemsByUrl(
+            { name: 'Blocks World 1', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/blocksworld1/domain.txt' },
+            [{ name: 'Move Blocks From a to b', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/blocksworld1/problem.txt' }]
+        ));
 
-        // Insert sample data into db.
-        problems.forEach(function(problem) {
-            Problems.insert(problem);
-        });        
+        domains.push(loadDomainAndProblemsByUrl(
+            { name: 'Blocks World 2', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/blocksworld2/domain.txt' },
+            [
+                { name: 'Stack Blocks a b From Table x to a b Table y', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/blocksworld2/problem.txt' },
+                { name: 'Stack Blocks Stacked b a From Table X to Stacked a b Table Y', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/blocksworld2/problem2.txt'}
+            ]
+        ));
 
-        domains = [];
-        problems = [];
+        domains.push(loadDomainAndProblemsByUrl(
+            { name: 'Blocks World 3', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/blocksworld3/domain.txt' },
+            [
+                { name: 'Stack Blocks Stacked b a From Table 1 to Stacked a b Table 3, One Pile Per Table', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/blocksworld3/problem.txt' },
+                { name: 'Stack Blocks Stacked a b From Table 1 to Stacked a b Table 2, One Pile Per Table', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/blocksworld3/problem2.txt'}
+            ]
+        ));
 
-        // Extra stuff from github.
-        var domain;
-        var func = Meteor.wrapAsync(function(callback) {
-          downloadUrl('https://raw.githubusercontent.com/primaryobjects/strips/master/examples/cake/domain.pddl', function(text) {
-            domain = { created: new Date(), user: 'public', name: 'Cake', code: text };
+        domains.push(loadDomainAndProblemsByUrl(
+            { name: 'Blocks World 4', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/blocksworld4/domain.txt' },
+            [
+                { name: 'Stack Blocks Stacked c b a From Table 1 to Stacked a b c Table 3, One Pile Per Table', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/blocksworld4/problem.txt' },
+                { name: 'Stack Blocks Stacked a b c From Table 1 to Stacked a b c Table 2, One Pile Per Table', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/blocksworld4/problem2.txt'}
+            ]
+        ));
 
-            Domains.insert(domain, function(err, id) {
-              downloadUrl('https://raw.githubusercontent.com/primaryobjects/strips/master/examples/cake/problem.pddl', function(text) {
-                var problem = { created: new Date(), user: 'public', domain: id, name: 'Have Cake and Eat It Too', code: text };
-                Problems.insert(problem);
+        domains.push(loadDomainAndProblemsByUrl(
+            { name: 'Blocks World 5 Sussmann Anomaly', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/blocksworld5/domain.txt' },
+            [
+                { name: 'Sussman Anomaly: From b and stacked c a To a b c', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/blocksworld5/problem.txt' }
+            ]
+        ));
 
-                callback(null, 'cake');
-              });
-            });
-          });
-        });
+        domains.push(loadDomainAndProblemsByUrl(
+            { name: 'Cake', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/cake/domain.pddl' },
+            [{ name: 'Have Your Cake and Eat It Too', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/cake/problem.pddl' }]
+        ));
 
-        func(function(err, result) {
-          console.log('done.');
-        });
+        domains.push(loadDomainAndProblemsByUrl(
+            { name: 'Birthday Dinner', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/dinner/domain.pddl' },
+            [{ name: 'Cook Dinner and Wrap a Present', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/dinner/problem.pddl' }]
+        ));
 
-        var func = Meteor.wrapAsync(function(callback) {
-          downloadUrl('https://raw.githubusercontent.com/primaryobjects/strips/master/examples/dinner/domain.pddl', function(text) {
-            domain = { created: new Date(), user: 'public', name: 'Birthday Dinner', code: text };
+        domains.push(loadDomainAndProblemsByUrl(
+            { name: 'Air Cargo Transportation', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/aircargo/domain.txt' },
+            [{ name: 'Swap Airports From SFO and JFK', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/aircargo/problem.txt' }]
+        ));
 
-            Domains.insert(domain, function(err, id) {
-              downloadUrl('https://raw.githubusercontent.com/primaryobjects/strips/master/examples/dinner/problem.pddl', function(text) {
-                var problem = { created: new Date(), user: 'public', domain: id, name: 'Cook Dinner and Wrap a Present', code: text };
-                Problems.insert(problem);
+        domains.push(loadDomainAndProblemsByUrl(
+            { name: 'Dock Worker Robot', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/dockworkerrobot/domain.txt' },
+            [{ name: '1 Robot, 2 Locations', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/dockworkerrobot/problem.txt' }]
+        ));
 
-                callback(null, 'dinner');
-              });
-            });
-          });
-        });
+        domains.push(loadDomainAndProblemsByUrl(
+            { name: "1D Rubik's Cube", url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/rubikscube/domain.txt' },
+            [
+                { name: '1 3 2 6 5 4', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/rubikscube/problem1.txt' },
+                { name: '6 5 4 3 1 2', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/rubikscube/problem2.txt' },
+                { name: '5 6 2 1 4 3', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/rubikscube/problem3.txt' },
+            ]
+        ));
 
-        func(function(err, result) {
-          console.log('done.');
-        });
-
-        var func = Meteor.wrapAsync(function(callback) {
-          downloadUrl('https://raw.githubusercontent.com/primaryobjects/strips/master/examples/starcraft/domain.txt', function(text) {
-            domain = { created: new Date(), user: 'public', name: 'Starcraft', code: text };
-
-            Domains.insert(domain, function(err, id) {
-              downloadUrl('https://raw.githubusercontent.com/primaryobjects/strips/master/examples/starcraft/barracks.txt', function(text) {
-                var problem = { created: new Date(), user: 'public', domain: id, name: 'Barracks', code: text };
-                Problems.insert(problem);
-
-                downloadUrl('https://raw.githubusercontent.com/primaryobjects/strips/master/examples/starcraft/marine.txt', function(text) {
-                  problem = { created: new Date(), user: 'public', domain: id, name: 'Marine', code: text };
-                  Problems.insert(problem);
-
-                  downloadUrl('https://raw.githubusercontent.com/primaryobjects/strips/master/examples/starcraft/tank.txt', function(text) {
-                    problem = { created: new Date(), user: 'public', domain: id, name: 'Tank', code: text };
-                    Problems.insert(problem);
-
-                    downloadUrl('https://raw.githubusercontent.com/primaryobjects/strips/master/examples/starcraft/wraith.txt', function(text) {
-                      problem = { created: new Date(), user: 'public', domain: id, name: 'Wraith', code: text };
-                      Problems.insert(problem);
-
-                      callback(null, 'starcraft');
-                    });
-                  });
-                });
-              });
-            });
-          });
-        });
-
-        func(function(err, result) {
-          console.log('done.');
-        });
+        // Save all domains and problems.
+        saveData(domains);
     }
 
     function downloadUrl(url, callback) {
       Meteor.http.call('GET', url, function (err, result) {
         callback(result.content);
       });
+    }
+
+    function saveData(domains, callback1) {
+        // Insert sample data into db.
+        for (var i in domains) {
+            domain = domains[i];
+
+            var domainCopy = JSON.parse(JSON.stringify(domain));
+            domainCopy.problems = null;
+
+            var id = Domains.insert(domain);
+            console.log('Added domain ' + domain.name + ', id = ' + id);
+
+            for (var j in domain.problems) {
+                var problem = domain.problems[j];
+                problem.domain = id;
+
+                Problems.insert(problem);
+                console.log('Added problem ' + problem.name);
+            }
+        }
+    }
+
+    function loadDomainAndProblemsByUrl(domain, problems) {
+        var domain;
+
+        // Load domain.
+        Async.runSync(function(done) {
+            downloadUrl(domain.url, function(text) {
+                domain = { created: new Date(), user: 'public', name: domain.name, code: text };
+                domain.problems = [];
+
+                console.log('Added ' + domain.name);
+                done();
+            });
+        });
+        
+        // Load problems for domain.
+        Async.runSync(function(done) {
+            for (var i in problems) {
+                Async.runSync(function(done1) {
+                    downloadUrl(problems[i].url, function(text) {
+                        var problem = { created: new Date(), user: 'public', name: problems[i].name, code: text };
+                        domain.problems.push(problem);
+
+                        console.log('Added ' + problems[i].name);
+                        done1();
+                    });
+                });
+            }
+
+            done();
+        });
+
+        // Add the domain and problems to the array.
+        return domain;
     }
 })

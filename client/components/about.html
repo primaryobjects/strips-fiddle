@@ -1,13 +1,17 @@
 <template name='about'>
     <h1>About</h1>
     
-    <p>STRIPS-Fiddle is an online editor for creating <a href="https://en.wikipedia.org/wiki/STRIPS" target="_blank">STRIPS</a> artificial intelligence planning programs using <a href='https://en.wikipedia.org/wiki/Planning_Domain_Definition_Language' target='_blank'>PDDL</a>. STRIPS-Fiddle is powered by the node.js <a href='https://github.com/primaryobjects/strips' target='_blank'>strips</a> library.</p>
+    <p>STRIPS-Fiddle is an online editor for creating <a href="https://en.wikipedia.org/wiki/STRIPS" target="_blank">STRIPS</a> automated planning programs using <a href='https://en.wikipedia.org/wiki/Planning_Domain_Definition_Language' target='_blank'>PDDL</a>. STRIPS-Fiddle is powered by the node.js artificial intelligence library, <a href='https://github.com/primaryobjects/strips' target='_blank'>strips</a></p>
 
     <h2>What is STRIPS?</h2>
 
-    <p>STRIPS stands for "Standford Research Institute Problem Solver". It's a type of automated planner that comprises of an initial state, actions, and a goal state. By applying the actions over the initial state and all child states, a goal is (hopefully) found.</p>
+    <p>STRIPS is an <a href="https://en.wikipedia.org/wiki/Automated_planning_and_scheduling" target="_blank">automated planner</a> that can be used by intelligent agents and autonomous robots. It involves intelligently executing a sequence of actions in order to achieve a goal.</p>
 
-    <p>STRIPS uses simple definitions for actions. Actions include preconditions (conditions that must exist in the present state) and postconditions (changes to be applied to the present state). States are represented by a series of literals and predicates. For example: holding(gold) has(shovel). Here's an example <a href="https://github.com/primaryobjects/strips/blob/master/examples/starcraft/domain.txt" target="_blank">domain</a> and <a href="https://github.com/primaryobjects/strips/blob/master/examples/starcraft/barracks.txt" target="_blank">problem</a> in PDDL that solves Starcraft build orders!</p>
+    <p>STRIPS stands for "Standford Research Institute Problem Solver". It consists of an initial state, actions, and a goal state. By applying the actions over the initial state and all child states, a goal can be found.</p>
+
+    <p>STRIPS uses simple definitions to define a world and available actions. Actions include preconditions (conditions that must exist in the present state) and postconditions (changes to be applied to the present state). States are represented by a series of literals and predicates. For example: holding(gold) has(shovel).</p>
+
+    <p>Here's an example <a href="https://github.com/primaryobjects/strips/blob/master/examples/starcraft/domain.txt" target="_blank">domain</a> and <a href="https://github.com/primaryobjects/strips/blob/master/examples/starcraft/barracks.txt" target="_blank">problem</a> in PDDL that solves Starcraft build orders!</p>
 
     <p>One of the neat things about STRIPS is that you can apply various search algorithms to iterate the various states and find solutions. Common methods include breadth-first search, depth-first search, and A*.</p>
     <h2>How was this made?</h2>
@@ -18,7 +22,7 @@
 
     <p>When you run a program in STRIPS-Fiddle, it's executed locally in the web browser and the output is displayed on the page.</p>
 
-    <p>Oh yeah, this web site was made with <a href='https://www.meteor.com/' target='_blank'>Meteor.js</a>.</p>
+    <p>This web site was made with <a href='https://www.meteor.com/' target='_blank'>Meteor.js</a>.</p>
 
     <h2>Who created this?</h2>
 

@@ -105,6 +105,14 @@ Meteor.startup(function() {
             ]
         ));
 
+        domains.push(loadDomainAndProblemsByUrl(
+            { name: "Shakeys World", url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/shakeysworld/domain.txt' },
+            [
+                { name: 'Turn Light On in Room 3', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/shakeysworld/problem1.txt' },
+                { name: 'Pickup Ball', url: 'https://raw.githubusercontent.com/primaryobjects/strips/master/examples/shakeysworld/problem2.txt' }
+            ]
+        ));
+
         // Save all domains and problems.
         saveData(domains);
     }

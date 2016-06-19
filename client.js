@@ -3,9 +3,9 @@ if (Meteor.isClient) {
     Router.configure({
         layoutTemplate: 'layout'
     });
-    Router.route('/', function() { this.render('home'); });
-    Router.route('/about');
-    Router.route('/contact');
+    Router.route('/', { name: 'home' }, function() { this.render('home'); });
+    Router.route('/about', { name: 'about' });
+    Router.route('/contact', { name: 'contact' });
     Router.onAfterAction(function() {
         var title = '';
 

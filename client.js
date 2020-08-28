@@ -28,9 +28,10 @@ if (Meteor.isClient) {
     Meteor.subscribe('Domains', Session.get('selection'));
 
     // Bind to changes to the 'domain' session variable so we can update the Problem dropdown when the Domain dropdown changes.
-    Meteor.autosubscribe(function() {
+    Tracker.autorun(function() {
         Meteor.subscribe('Problems', Session.get('domainId'), Session.get('selection'));
     });
+
 
     // Wait for data to load before initializing dropdowns upon page-load.
     Template.domainForm.rendered = function() {

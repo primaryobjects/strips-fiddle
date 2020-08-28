@@ -118,7 +118,8 @@ Meteor.startup(function() {
     }
 
     function downloadUrl(url, callback) {
-      Meteor.http.call('GET', url, function (err, result) {
+//    Meteor.http.call('GET', url, function (err, result) {
+      HTTP.get(url, {}, function(err, result) {
         callback(result.content);
       });
     }

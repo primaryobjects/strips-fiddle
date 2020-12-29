@@ -37,4 +37,5 @@ underscore@1.0.10
 
 npm-container
 edemaine:accounts-ui-bootstrap-3
-google
+accounts-google
+service-configuration

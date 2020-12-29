@@ -2,7 +2,7 @@
   "name": "stripsfiddle",
   "private": true,
   "scripts": {
-    "start": "meteor run"
+    "start": "meteor --settings settings.json"
   },
   "dependencies": {
     "@babel/runtime": "^7.8.3"

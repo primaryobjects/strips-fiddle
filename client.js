@@ -80,7 +80,7 @@ if (Meteor.isClient) {
                     // If "<Create your own>" was selected for the domain then this dropdown will have no other options, except for "<Create your own">, so just select index 0. Otherwise, pick the first available option at index 1.
                     dropdown.prop('selectedIndex', dropdown.children().length > 1 ? 1 : 0);
                 }
-                
+
                 dropdown.trigger('change');
             }, this));
         }, this));
@@ -130,5 +130,5 @@ if (Meteor.isClient) {
         var results = regex.exec(location.search);
 
         return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-    }    
+    }
 }

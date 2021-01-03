@@ -56,21 +56,31 @@ if (Meteor.isClient) {
             $('#domainPanel').collapse('show');
             $('#problemPanel').collapse('show');
             $('#outputPanel').collapse('hide');
-            
+
             $('html, body').stop().animate({ scrollTop: $('html, body').offset().top }, 1000, function() {
             });
         }
     });
 
     Template.domainForm.events({
-        'change #ctrlDomain': function(event, template) {
-            onDomainChange($(event.target));
+        'change #ctrlDomain, click #btnRemoveDomain': function(event, template) {
+            if (event.currentTarget.id === 'ctrlDomain') {
+                onDomainChange($(event.target));
+            }
+            else if (event.currentTarget.id === 'btnRemoveDomain') {
+                onDomainRemove();
+            }
         }
     });
 
     Template.problemForm.events({
-        'change #ctrlProblem': function(event, template) {
-            onProblemChange($(event.target));
+        'change #ctrlProblem, click #btnRemoveProblem': function(event, template) {
+            if (event.currentTarget.id === 'ctrlProblem') {
+                onProblemChange($(event.target));
+            }
+            else if (event.currentTarget.id === 'btnRemoveProblem') {
+                onProblemRemove();
+            }
         }
     });
 
@@ -95,6 +105,19 @@ if (Meteor.isClient) {
             // Remember dropdown selection.
             selection.domain = id;
             //localStorage['selection'] = JSON.stringify(selection);
+
+            if (domain.name && domain.user === Meteor.userId()) {
+                // Enable the delete button.
+                $('#btnRemoveDomain').removeClass('hide');
+            }
+            else {
+                $('#btnRemoveDomain').addClass('hide');
+            }
+        }
+        else {
+            $('#btnRemoveDomain').addClass('hide');
+            $('#txtDomainName').val('');
+            $('#txtDomainCode').val('');
         }
 
         if (element.prop('selectedIndex') == 0) {
@@ -116,12 +139,28 @@ if (Meteor.isClient) {
 
                 // Remember dropdown selection.
                 selection.problem = id;
-                //localStorage['selection'] = JSON.stringify(selection);                    
+                //localStorage['selection'] = JSON.stringify(selection);
             }
 
             // Populate the name and code for the problem.
             $('#txtProblemName').val(problem.name);
             $('#txtProblemCode').val(problem.code);
+
+            if (problem.name) {
+                if (problem.user === Meteor.userId()) {
+                    // Enable the delete button.
+                    $('#btnRemoveProblem').removeClass('hide');
+                }
+                else {
+                    $('#btnRemoveProblem').addClass('hide');
+                }
+            }
+            else {
+                $('#btnRemoveProblem').addClass('hide');
+                $('#txtProblemName').val('');
+                $('#txtProblemCode').val('');
+            }
+
         }
 
         updateShareLink();
@@ -130,7 +169,7 @@ if (Meteor.isClient) {
     function updateShareLink() {
         // Display permalink.
         var share = $('#share');
-        
+
         var url = 'http://' + window.location.host + '?d=' + selection.domain;
         if (selection.problem && $('#ctrlProblem').prop('selectedIndex') > 0) {
             url += '&p=' + selection.problem;
@@ -148,9 +187,51 @@ if (Meteor.isClient) {
         }
     }
 
+    function onDomainRemove(callback) {
+        var domainId = $('#ctrlDomain').val();
+        var txtDomainName = $('#txtDomainName').val();
+
+        // Remove existing domain and its problems.
+        var domainId = $('#ctrlDomain').val();
+        var problems = Problems.find({ domain: domainId });
+
+        if (confirm('Are you sure you want to delete "' + txtDomainName + '" and ' + problems.count() + ' problems?') && domainId && domainId.indexOf('<Create your own>') === -1 && txtDomainName) {
+            Meteor.call('removeDomain', domainId, function(err, domainId) {
+                if (callback) {
+                    callback({ domain: domainId });
+                }
+            });
+        }
+        else {
+            if (callback) {
+                callback({ domain: domainId });
+            }
+        }
+    }
+
+    function onProblemRemove(callback) {
+        var domainId = $('#ctrlDomain').val();
+        var txtProblemName = $('#txtProblemName').val();
+
+        // Remove existing problem.
+        var problemId = $('#ctrlProblem').val();
+
+        if (confirm('Are you sure you want to delete "' + txtProblemName + '"?') && problemId && problemId.indexOf('<Create your own>') === -1 && txtProblemName) {
+            Meteor.call('removeProblem', problemId, function(err, problemId) {
+                if (callback) {
+                    callback({ domain: domainId, problem: problemId });
+                }
+            });
+        }
+        else {
+            if (callback) {
+                callback({ domain: domainId, problem: problemId });
+            }
+        }
+    }
+
     function save(callback) {
         var domainId = $('#ctrlDomain').val();
-        var domainName = $('#ctrlDomain option:selected').text();
         var txtDomainName = $('#txtDomainName').val();
         var txtProblemName = $('#txtProblemName').val();
 
@@ -176,7 +257,7 @@ if (Meteor.isClient) {
                     else {
                         if (callback) {
                             callback({ domain: domainId, problem: null });
-                        }                        
+                        }
                     }
                 });
             }
@@ -200,5 +281,5 @@ if (Meteor.isClient) {
                 });
             }
         }
-    }    
+    }
 }

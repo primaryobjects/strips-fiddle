@@ -6,7 +6,13 @@
         <div id='domainPanel' class='panel-collapse collapse editor' role='tabpanel' aria-labelledby='domainTab'>
             <div class="panel-body">
                 <div class='form-group'>
-                    <label>Select an existing Domain</label>
+                    <div class="pull-left">
+                        <label>Select an existing Domain</label>
+                    </div>
+                    <div class="text-right">
+                        <i id="btnRemoveDomain" class="glyphicon glyphicon-remove hide" title="Delete"></i>
+                    </div>
+
                     <select id='ctrlDomain' class='form-control'>
                         <option>&lt;Create your own&gt;</option>
                         {{ #each domains }}

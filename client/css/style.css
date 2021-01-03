@@ -40,3 +40,13 @@ input[type='text'], select.form-control {
 #share:hover {
     color: #eeccff;
 }
+
+.glyphicon-remove {
+    color: darkred;
+    opacity: 0.5;
+}
+
+.glyphicon-remove:hover {
+    opacity: 1;
+    cursor: pointer;
+}

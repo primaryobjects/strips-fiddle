@@ -6,7 +6,13 @@
         <div id='problemPanel' class='panel-collapse collapse editor' role='tabpanel' aria-labelledby='problemTab'>
             <div class="panel-body">
                 <div class='form-group'>
-                    <label>Select an existing Problem</label>
+                    <div class="pull-left">
+                        <label>Select an existing Problem</label>
+                    </div>
+                    <div class="text-right">
+                        <i id="btnRemoveProblem" class="glyphicon glyphicon-remove hide" title="Delete"></i>
+                    </div>
+
                     <select id='ctrlProblem' class='form-control'>
                         <option>&lt;Create your own&gt;</option>
                         {{ #each problems }}

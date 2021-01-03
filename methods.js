@@ -44,7 +44,7 @@ Meteor.methods({
                         // Domain not found, must exist for 'public' user. Copy and insert under this user.
                         Domains.insert({ created: new Date(), user: Meteor.userId(),  name: 'Copy of ' + name, code: code }, function(err, id) {
                             callback(err, id);
-                        });                        
+                        });
                     }
                     else {
                         callback(err, domain);
@@ -67,7 +67,55 @@ Meteor.methods({
                         // Problem not found, must exist for 'public' user. Copy and insert under this user.
                         Problems.insert({ created: new Date(), user: Meteor.userId(), domain: domain, name: name, code: code }, function(err, id) {
                             callback(err, id);
-                        });                        
+                        });
+                    }
+                    else {
+                        callback(err, problem);
+                    }
+                });
+            });
+
+            return func();
+        }
+    },
+
+    removeDomain: function(domain) {
+        if (!Meteor.userId()) {
+            throw new Meteor.Error("not-authorized");
+        }
+        else {
+            var func = Meteor.wrapAsync(function(callback) {
+                // Remove all problems in this domain.
+                var problems = Problems.find({ domain: domain });
+                problems.forEach(function(problem) {
+                    Problems.remove({ _id: problem._id, user: Meteor.userId() });
+                });
+
+                Domains.remove({ _id: domain, user: Meteor.userId() }, function(err, count) {
+                    if (!count) {
+                        // Domain not found, must exist for 'public' user.
+                        callback(err, domain);
+                    }
+                    else {
+                        callback(err, domain);
+                    }
+                });
+            });
+
+            return func();
+        }
+    },
+
+    removeProblem: function(problem) {
+        if (!Meteor.userId()) {
+            throw new Meteor.Error("not-authorized");
+        }
+        else {
+            var func = Meteor.wrapAsync(function(callback) {
+                Problems.remove({ _id: problem, user: Meteor.userId() }, function(err, count) {
+                    if (!count) {
+                        // Problem not found, must exist for 'public' user.
+                        callback(err, problem);
                     }
                     else {
                         callback(err, problem);

@@ -3,7 +3,7 @@ Meteor.startup(function() {
         var result = null;
 
         if (selection && selection.domain) {
-            result = Domains.find({ $or: [{ user: this.userId }, { user: 'public' }, { _id: selection.domain }], $orderby: { created: 1 } });
+            result = Domains.find({ $or: [{ user: this.userId }, { user: 'public' }, { _id: selection.domain }] , $orderby: { created: 1 } });
         }
         else {
             result = Domains.find({ $or: [{ user: this.userId }, { user: 'public' }], $orderby: { created: 1 } });
@@ -17,7 +17,7 @@ Meteor.startup(function() {
 
         if (domainId) {
             if (selection && selection.problem) {
-                result = Problems.find({  $or: [{ user: this.userId }, { user: 'public' }, { _id: selection.problem }], domain: domainId, $orderby: { created: 1 } });
+                result = Problems.find({ $or: [{ user: this.userId }, { user: 'public' }, { _id: selection.problem }], domain: domainId, $orderby: { created: 1 } });
             }
             else {
                 result = Problems.find({ $or: [{ user: this.userId }, { user: 'public' }], domain: domainId, $orderby: { created: 1 } });

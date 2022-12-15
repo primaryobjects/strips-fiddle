@@ -5,7 +5,7 @@ An online editor for creating [STRIPS](https://en.wikipedia.org/wiki/STRIPS) art
 
 Run your favorite STRIPS PDDL programs right in the web browser.
 
-Try it at http://stripsfiddle.herokuapp.com
+Try it at https://stripsfiddle.meteorapp.com/
 
 If you're new to STRIPS automated planning, here is a great [tutorial](http://www.primaryobjects.com/2015/11/06/artificial-intelligence-planning-with-strips-a-gentle-introduction/) to get you started.
 

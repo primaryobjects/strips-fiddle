@@ -3,10 +3,10 @@ Meteor.startup(function() {
         var result = null;
 
         if (selection && selection.domain) {
-            result = Domains.find({ $query: { $or: [{ user: this.userId }, { user: 'public' }, { _id: selection.domain }] }, $orderby: { created: 1 } });
+            result = Domains.find({ $or: [{ user: this.userId }, { user: 'public' }, { _id: selection.domain }] }, { sort: { created: 1 }});
         }
         else {
-            result = Domains.find({ $query: { $or: [{ user: this.userId }, { user: 'public' }] }, $orderby: { created: 1 } });
+            result = Domains.find({ $or: [{ user: this.userId }, { user: 'public' }] }, {sort: { created: 1 }});
         }
 
         return result;
@@ -17,10 +17,10 @@ Meteor.startup(function() {
 
         if (domainId) {
             if (selection && selection.problem) {
-                result = Problems.find({ $query: { $or: [{ user: this.userId }, { user: 'public' }, { _id: selection.problem }], domain: domainId }, $orderby: { created: 1 } });
+                result = Problems.find({ $or: [{ user: this.userId }, { user: 'public' }, { _id: selection.problem }], domain: domainId }, {sort: { created: 1 }});
             }
             else {
-                result = Problems.find({ $query: { $or: [{ user: this.userId }, { user: 'public' }], domain: domainId }, $orderby: { created: 1 } });
+                result = Problems.find({ $or: [{ user: this.userId }, { user: 'public' }], domain: domainId }, {sort: { created: 1 }});
             }
         }
 
